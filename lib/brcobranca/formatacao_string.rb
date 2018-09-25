@@ -10,15 +10,10 @@ module Brcobranca
     def format_size(size)
       data = remove_accents.strip.gsub(/\s+/, ' ').gsub(/[^A-Za-z0-9[[:space:]]]/, '')
       if data.size > size
-        data.truncate(size)
+        data.slice(0, size)
       else
         data.ljust(size, ' ')
       end
-    end
-
-    def truncate(truncate_at)
-      return dup unless length > truncate_at
-      "#{self[0, truncate_at]}"
     end
 
     def remove_accents
