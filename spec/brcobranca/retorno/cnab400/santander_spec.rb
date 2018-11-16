@@ -18,7 +18,7 @@ RSpec.describe Brcobranca::Retorno::Cnab400::Santander do
     expect(pagamentos.size).to eq(53) # deve ignorar a primeira linha que é header
     pagamento = pagamentos.first
     expect(pagamento.agencia_com_dv).to eql('0730')
-    expect(pagamento.cedente_com_dv).to eql('035110')
+    expect(pagamento.cedente_com_dv).to eql('00035110')
     expect(pagamento.nosso_numero).to eql('00000011')
     expect(pagamento.carteira).to eql('I')
     expect(pagamento.data_vencimento).to eql('000000')
