@@ -22,7 +22,7 @@ module Brcobranca
           # começa do 0 então contar com +1 as posições
           parse.field :codigo_registro, 0..0
           parse.field :agencia_com_dv, 17..20
-          parse.field :cedente_com_dv, 23..28
+          parse.field :cedente_com_dv, 21..28
           parse.field :nosso_numero, 62..69
           # parse.field :carteira_variacao, 82..84
           parse.field :carteira, 107..107
