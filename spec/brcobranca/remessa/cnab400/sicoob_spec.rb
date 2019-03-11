@@ -21,7 +21,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Sicoob do
       agencia: '4327',
       conta_corrente: '12345678',
       digito_conta: '1',
-      convenio: '123456789',
+      convenio: '123456',
       empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
       documento_cedente: '12345678910',
       pagamentos: [pagamento] }
@@ -106,10 +106,10 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Sicoob do
         expect(objeto.errors.full_messages).to include('Convenio não pode estar em branco.')
       end
 
-      it 'deve ser invalido se convenio tiver mais de 9 digitos' do
+      it 'deve ser invalido se convenio tiver mais de 6 digitos' do
         sicoob.convenio = '1234567890'
         expect(sicoob.invalid?).to be true
-        expect(sicoob.errors.full_messages).to include('Convenio deve ter 9 dígitos.')
+        expect(sicoob.errors.full_messages).to include('Convenio deve ter 6 dígitos.')
       end
     end
   end
@@ -138,7 +138,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Sicoob do
       id_empresa = sicoob.info_conta
       expect(id_empresa[0..3]).to eq '4327' # agencia
       expect(id_empresa[4]).to eq '3' # digito_agencia
-      expect(id_empresa[5..13]).to eq '123456789' # convenio
+      expect(id_empresa[5..13]).to eq '123456781' # convenio
       expect(id_empresa[14..19]).to eq '      ' # brancos
     end
 

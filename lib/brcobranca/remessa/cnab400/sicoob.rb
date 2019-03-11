@@ -42,7 +42,11 @@ module Brcobranca
         validates_length_of :documento_cedente, minimum: 11, maximum: 14, message: 'deve ter entre 11 e 14 dígitos.'
 
         # Com DV
-        validates_length_of :convenio, is: 9, message: 'deve ter 9 dígitos.'
+        validates_length_of :convenio, is: 6, message: 'deve ter 6 dígitos.'
+
+        def sequencial_remessa=(valor)
+          @sequencial_remessa = valor.to_s.rjust(7, '0') if valor
+        end
 
         def initialize(campos = {})
           campos = {
@@ -74,7 +78,7 @@ module Brcobranca
           # 039   008 9(008) Código do Cliente/Beneficiário: vide planilha "Capa" deste arquivo
           # 040   001 A(001) Dígito Verificador do Código: vide planilha "Capa" deste arquivo
           # 046   006 9(006) Número do convênio líder: Brancos
-          "#{agencia}#{digito_agencia}#{convenio}      "
+          "#{agencia}#{digito_agencia}#{conta_corrente}#{digito_conta}      "
         end
 
         def digito_agencia
