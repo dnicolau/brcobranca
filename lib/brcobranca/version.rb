@@ -2,5 +2,5 @@
 #
 
 module Brcobranca
-  VERSION = '9.2.7'
+  VERSION = '9.2.8'
 end
