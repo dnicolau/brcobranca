@@ -145,7 +145,7 @@ module Brcobranca
           detalhe << pagamento.cidade_sacado.format_size(15)                  # cidade do pagador                 X[15] 335 a 349
           detalhe << pagamento.uf_sacado                                      # UF do pagador                     X[02] 350 a 351
           detalhe << ''.ljust(40, ' ')                                        # informacoes avalista              X[40] 352 a 393 TODO implementar avalista
-          detalhe << pagamento.dias_protesto.to_s.ljust(2, ' ')               # numero de dias para protesto      X[02] 392 a 393
+          detalhe << pagamento.dias_protesto.to_s.ljust(2, '0')               # numero de dias para protesto      X[02] 392 a 393
           detalhe << ' '                                                      # complemento (brancos)             X[01] 394 a 394
           detalhe << sequencial.to_s.rjust(6, '0')                            # sequencial do registro            9[06] 395 a 400
         end
