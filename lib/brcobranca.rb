@@ -170,6 +170,7 @@ module Brcobranca
       autoload :BancoBrasilia, 'brcobranca/remessa/cnab400/banco_brasilia'
       autoload :Unicred,       'brcobranca/remessa/cnab400/unicred'
       autoload :Credisis,      'brcobranca/remessa/cnab400/credisis'
+      autoload :Safra,         'brcobranca/remessa/cnab400/safra'
     end
 
     module Cnab240
