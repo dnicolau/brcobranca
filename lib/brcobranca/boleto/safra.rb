@@ -151,11 +151,7 @@ module Brcobranca
       # Monta a primeira parte do código de barras, que é a mesma para todos bancos.
       # @return [String] 18 caracteres numéricos.
       def codigo_barras_primeira_parte
-        "#{banco}#{moeda}#{dac}#{fator_vencimento}#{valor_documento_formatado}"
-      end
-
-      def dac
-        "#{banco}#{moeda}#{fator_vencimento}#{valor_documento_formatado}7#{agencia}#{agencia_dv}#{conta_corrente}#{conta_corrente_dv}#{nosso_numero}#{nosso_numero_dv}2".modulo11
+        "#{banco}#{moeda}#{fator_vencimento}#{valor_documento_formatado}"
       end
     end
   end
