@@ -108,8 +108,8 @@ module Brcobranca
           detalhe << info_conta                                       # Identificação Da Empresa No Banco           9[14]       018 a 031
           detalhe << ''.rjust(6, ' ')                                 # Brancos                                     X[06]       032 a 037
           detalhe << ''.rjust(25, ' ')                                # Uso Exclusivo Da Empresa                    X[25]       038 a 062
-          detalhe << pagamento.nosso_numero.to_s.rjust(8, '0')        # identificacao do titulo (nosso numero)      9[08]       063 a 070
-          detalhe << digito_nosso_numero(pagamento.nosso_numero).to_s # dv nosso numero                             9[01]       070 a 071
+          detalhe << pagamento.nosso_numero[0..7].to_s.rjust(8, '0')  # identificacao do titulo (nosso numero)      9[08]       063 a 070
+          detalhe << pagamento.nosso_numero[8].to_s                   # dv nosso numero                             9[01]       070 a 071
           detalhe << ''.rjust(30, ' ')                                # Brancos                                     X[30]       072 a 101
           detalhe << '0'                                              # Código Iof Operações De Seguro              9[01]       102 a 102
           detalhe << '00'                                             # Identificação Do Tipo De Moeda              9[02]       103 a 104
@@ -120,7 +120,7 @@ module Brcobranca
           detalhe << pagamento.documento_ou_numero.to_s.ljust(10, ' ').format_size(10)# num. controle                         X[10]       111 a 120
           detalhe << pagamento.data_vencimento.strftime('%d%m%y')     # data de vencimento                          9[06]       121 a 126
           detalhe << pagamento.formata_valor                          # valor do titulo                             9[13]       127 a 139
-          detalhe << banco_cobranca                                   # Código Do Banco Encarregado Da Cobrança     9[03]       140 a 142
+          detalhe << banco_cobranca.presence || '422'                 # Código Do Banco Encarregado Da Cobrança     9[03]       140 a 142
           detalhe << agencia_cobranca.to_s.ljust(5, '0')              # Agência Encarregada Da Cobrança             9[05]       143 a 147
           detalhe << pagamento.especie_titulo                         # especie do titulo                           9[02]       148 a 149
           detalhe << 'N'                                              # aceite (A=A/N=N)                            X[01]       150 a 150
@@ -149,6 +149,28 @@ module Brcobranca
           detalhe << sequencial.to_s.rjust(6, '0')                    # numero do registro do arquivo               9[06]       395 a 400
 
           detalhe
+        end
+
+        # Tipo de Registro Identificação Registro Trailler 9(01) 1 1 9 (Nove)
+        # Brancos Brancos X(367) 2 368 Brancos
+        # Quantidade Quantidade De Títulos Existentes Arquivo 9(08) 369 376
+        # Valor Total Valor Total Dos Títulos 9(13)V99 377 391
+        # Núm. Arquivo Número Seqüencial De Geração Do Arquivo 9(03) 392 394
+        # Último Numero Num. Seqüencial Número Seqüencial Do Registro No Arquivo 9(06) 395 400 De Seq + 1 
+
+        # Trailer do arquivo remessa
+        #
+        # @param sequencial
+        #   num. sequencial do registro no arquivo
+        #
+        # @return [String]
+        #
+        def monta_trailer(sequencial)
+          # CAMPO                   TAMANHO  VALOR
+          # identificacao registro  [1]      9
+          # complemento             [393]
+          # num. sequencial         [6]
+          "9#{''.rjust(367, ' ')}#{pagamentos.count.to_s.rjust(8, '0')}#{format_value(pagamentos.sum(:valor), 13)}#{sequencial_remessa.to_s.rjust(3, '0')}#{sequencial.to_s.rjust(6, '0')}"
         end
       end
     end
