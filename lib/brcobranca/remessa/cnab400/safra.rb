@@ -170,7 +170,7 @@ module Brcobranca
           # identificacao registro  [1]      9
           # complemento             [393]
           # num. sequencial         [6]
-          "9#{''.rjust(367, ' ')}#{pagamentos.count.to_s.rjust(8, '0')}#{format_value(pagamentos.sum(&:valor), 13)}#{sequencial_remessa.to_s.rjust(3, '0')}#{sequencial.to_s.rjust(6, '0')}"
+          "9#{''.rjust(367, ' ')}#{pagamentos.count.to_s.rjust(8, '0')}#{sprintf('%.2f', pagamentos.sum(&:valor)).delete('.').rjust(13, '0')}#{sequencial_remessa.to_s.rjust(3, '0')}#{sequencial.to_s.rjust(6, '0')}"
         end
       end
     end
