@@ -101,6 +101,7 @@ module Brcobranca
 
         def monta_detalhe(pagamento, sequencial)
           raise Brcobranca::RemessaInvalida, pagamento if pagamento.invalid?
+          cod_banco_cobranca = banco_cobranca.presence || '422'
 
           detalhe = '1'                                               # identificacao do registro                   9[01]       001 a 001
           detalhe << '02'                                             # Tipo De Inscrição Da Empresa CNPJ 02        9[02]       002 a 003
@@ -120,7 +121,7 @@ module Brcobranca
           detalhe << pagamento.documento_ou_numero.to_s.ljust(10, ' ').format_size(10)# num. controle                         X[10]       111 a 120
           detalhe << pagamento.data_vencimento.strftime('%d%m%y')     # data de vencimento                          9[06]       121 a 126
           detalhe << pagamento.formata_valor                          # valor do titulo                             9[13]       127 a 139
-          detalhe << banco_cobranca.presence || '422'                 # Código Do Banco Encarregado Da Cobrança     9[03]       140 a 142
+          detalhe << cod_banco_cobranca                               # Código Do Banco Encarregado Da Cobrança     9[03]       140 a 142
           detalhe << agencia_cobranca.to_s.ljust(5, '0')              # Agência Encarregada Da Cobrança             9[05]       143 a 147
           detalhe << pagamento.especie_titulo                         # especie do titulo                           9[02]       148 a 149
           detalhe << 'N'                                              # aceite (A=A/N=N)                            X[01]       150 a 150
