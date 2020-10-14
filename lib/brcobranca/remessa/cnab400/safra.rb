@@ -103,6 +103,7 @@ module Brcobranca
           raise Brcobranca::RemessaInvalida, pagamento if pagamento.invalid?
           cod_banco_cobranca = banco_cobranca.presence || '422'
 
+          debugger
           detalhe = '1'                                               # identificacao do registro                   9[01]       001 a 001
           detalhe << '02'                                             # Tipo De Inscrição Da Empresa CNPJ 02        9[02]       002 a 003
           detalhe << documento_cedente                                # CNPJ 02                                     9[14]       004 a 017
