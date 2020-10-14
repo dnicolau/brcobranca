@@ -153,7 +153,7 @@ module Brcobranca
       #
       # @return [String] 25 caracteres numéricos.
       def codigo_barras_segunda_parte
-        "7#{agencia}#{agencia_dv}#{conta_corrente}#{conta_corrente_dv}#{nosso_numero[0...-1]}#{nosso_numero_dv}2"
+        "7#{agencia}#{agencia_dv}#{conta_corrente}#{conta_corrente_dv}#{nosso_numero}#{nosso_numero_dv}2"
       end
 
       # Monta a primeira parte do código de barras, que é a mesma para todos bancos.
