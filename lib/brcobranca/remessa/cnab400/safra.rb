@@ -109,8 +109,7 @@ module Brcobranca
           detalhe << info_conta                                       # Identificação Da Empresa No Banco           9[14]       018 a 031
           detalhe << ''.rjust(6, ' ')                                 # Brancos                                     X[06]       032 a 037
           detalhe << ''.rjust(25, ' ')                                # Uso Exclusivo Da Empresa                    X[25]       038 a 062
-          detalhe << pagamento.nosso_numero[0..7].to_s.rjust(8, '0')  # identificacao do titulo (nosso numero)      9[08]       063 a 070
-          detalhe << pagamento.nosso_numero[8].to_s                   # dv nosso numero                             9[01]       070 a 071
+          detalhe << pagamento.nosso_numero[0..6].to_s.rjust(9, '0')  # identificacao do titulo (nosso numero)      9[09]       063 a 071
           detalhe << ''.rjust(30, ' ')                                # Brancos                                     X[30]       072 a 101
           detalhe << '0'                                              # Código Iof Operações De Seguro              9[01]       102 a 102
           detalhe << '00'                                             # Identificação Do Tipo De Moeda              9[02]       103 a 104
