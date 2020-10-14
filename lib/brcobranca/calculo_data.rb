@@ -39,6 +39,10 @@ module Brcobranca
       strftime('%d/%m/%Y')
     end
 
+    def to_s_br_short
+      strftime('%d/%m/%y')
+    end
+
     # Calcula número de dias julianos.
     #
     # O cálculo é feito subtraindo-se a data atual, pelo último dia válido do ano anterior,

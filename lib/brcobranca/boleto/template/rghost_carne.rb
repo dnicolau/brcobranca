@@ -182,7 +182,7 @@ module Brcobranca
 
           # vencimento
           doc.moveto x: colunas[0], y: linhas[1]
-          doc.show boleto.data_vencimento.to_s_br
+          doc.show boleto.data_vencimento.to_s_br_short
 
           # agencia/codigo cedente
           doc.moveto x: colunas[0], y: linhas[2]
@@ -224,7 +224,7 @@ module Brcobranca
 
           # vencimento
           doc.moveto x: colunas[11], y: linhas[1]
-          doc.show boleto.data_vencimento.to_s_br
+          doc.show boleto.data_vencimento.to_s_br_short
 
           # cedente
           doc.moveto x: colunas[2], y: linhas[2]

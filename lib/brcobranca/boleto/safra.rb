@@ -16,6 +16,14 @@ module Brcobranca
       validates_length_of :agencia_dv, is: 1, message: 'deve ser igual a 1 dígitos.'
       validates_length_of :conta_corrente_dv, is: 1, message: 'deve ser igual a 1 dígitos.'
 
+      def initialize(campos = {})
+        campos = {
+          local_pagamento: 'Pagável em qualquer Banco do Sistema de Compensação'
+        }.merge!(campos)
+
+        super(campos)
+      end
+
       # Codigo do banco emissor (3 dígitos sempre)
       #
       # @return [String] 3 caracteres numéricos.
@@ -145,7 +153,7 @@ module Brcobranca
       #
       # @return [String] 25 caracteres numéricos.
       def codigo_barras_segunda_parte
-        "7#{agencia}#{agencia_dv}#{conta_corrente}#{conta_corrente_dv}#{nosso_numero}#{nosso_numero_dv}2"
+        "7#{agencia}#{agencia_dv}#{conta_corrente}#{conta_corrente_dv}#{nosso_numero[0...-1]}#{nosso_numero_dv}2"
       end
 
       # Monta a primeira parte do código de barras, que é a mesma para todos bancos.
