@@ -47,7 +47,7 @@ module Brcobranca
       # Número seqüencial utilizado para identificar o boleto.
       # @return [String] 8 caracteres numéricos.
       def nosso_numero=(valor)
-        @nosso_numero = valor.to_s.rjust(8, '0') if valor
+        @nosso_numero = valor.to_s.rjust(9, '0') if valor
       end
 
       # Dígito verificador do nosso número.
@@ -65,7 +65,7 @@ module Brcobranca
       # @example
       #  boleto.nosso_numero_boleto #=> "175/12345678-4"
       def nosso_numero_boleto
-        "#{nosso_numero}-#{nosso_numero_dv}"
+        "#{nosso_numero}"
       end
 
       # Agência + conta corrente do cliente para exibir no boleto.
@@ -153,7 +153,7 @@ module Brcobranca
       #
       # @return [String] 25 caracteres numéricos.
       def codigo_barras_segunda_parte
-        "7#{agencia}#{agencia_dv}#{conta_corrente}#{conta_corrente_dv}#{nosso_numero}#{nosso_numero_dv}2"
+        "7#{agencia}#{agencia_dv}#{conta_corrente}#{conta_corrente_dv}#{nosso_numero}2"
       end
 
       # Monta a primeira parte do código de barras, que é a mesma para todos bancos.
