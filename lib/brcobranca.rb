@@ -140,6 +140,7 @@ module Brcobranca
       autoload :Credisis,      'brcobranca/retorno/cnab400/credisis'
       autoload :Santander,     'brcobranca/retorno/cnab400/santander'
       autoload :BancoBrasil,   'brcobranca/retorno/cnab400/banco_brasil'
+      autoload :Safra,         'brcobranca/retorno/cnab400/safra'
     end
 
     module Cnab240
