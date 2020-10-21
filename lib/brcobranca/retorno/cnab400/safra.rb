@@ -24,6 +24,8 @@ module Brcobranca
           # :zeros, 21..22 # complemento de registro
 
           # :conta, 23..27 #numero da conta corrente da empresa
+          parse.field :agencia_com_dv, 17..21
+          parse.field :cedente_com_dv, 22..30
 
           # :brancos, 29..36 #complemento de registro
           # :uso_da_empresa, 37..61 #identificacao do titulo na empresa
