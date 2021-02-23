@@ -39,7 +39,7 @@ module Brcobranca
           campos = { modalidade_carteira: '14',
                      emissao_boleto: '2',
                      codigo_baixa: '2',
-                     dias_baixa: '000',
+                     dias_baixa: '  ',
                      distribuicao_boleto: '0',
                      especie_titulo: '99' }.merge!(campos)
           super(campos)
@@ -149,7 +149,7 @@ module Brcobranca
 
         def dias_baixa(pagamento)
           return "120" if pagamento.codigo_protesto.to_s == "3"
-          "000"
+          ''.rjust(3, ' ')
         end
 
         def data_mora(pagamento)

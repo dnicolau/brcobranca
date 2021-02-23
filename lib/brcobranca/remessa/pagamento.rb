@@ -119,7 +119,7 @@ module Brcobranca
           codigo_protesto: '3',
           dias_protesto: '00',
           codigo_baixa: '0',
-          dias_baixa: '000',
+          dias_baixa: '   ',
           cod_primeira_instrucao: '00',
           cod_segunda_instrucao: '00'
         }
