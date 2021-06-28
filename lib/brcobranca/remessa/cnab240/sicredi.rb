@@ -147,7 +147,7 @@ module Brcobranca
         end
 
         def codigo_desconto(pagamento)
-          '1'
+          pagamento.try(:cod_desconto) || '1'
         end
 
         def codigo_baixa(pagamento)
