@@ -151,8 +151,8 @@ module Brcobranca
           nosso_numero.somente_numeros.ljust(20, ' ')
         end
 
-        def codigo_desconto(_pagamento)
-          '1'
+        def codigo_desconto(pagamento)
+          pagamento.try(:cod_desconto) || '1'
         end
 
         def codigo_baixa(_pagamento)
