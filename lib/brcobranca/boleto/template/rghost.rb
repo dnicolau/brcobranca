@@ -24,6 +24,7 @@ module Brcobranca
         extend self
         include RGhost unless include?(RGhost)
         RGhost::Config::GS[:external_encoding] = Brcobranca.configuration.external_encoding
+        RGhost::Config::GS[:default_params] << '-dNOSAFER'
 
         # Habilitar em caso de problemas com permissão ao gerar local
         # RGhost::Config::GS[:default_params] << '-dNOSAFER'
