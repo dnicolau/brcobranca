@@ -1,4 +1,5 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Brcobranca::Remessa::Cnab400::Itau do
@@ -158,7 +159,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Itau do
     context 'detalhe' do
       it 'informacoes devem estar posicionadas corretamente no detalhe' do
         detalhe = itau.monta_detalhe pagamento, 2
-        expect(detalhe[37..61]).to eq "6969".ljust(25)
+        expect(detalhe[37..61]).to eq '6969'.ljust(25)
         expect(detalhe[62..69]).to eq '00000123' # nosso numero
         expect(detalhe[120..125]).to eq Date.current.strftime('%d%m%y') # data de vencimento
         expect(detalhe[126..138]).to eq '0000000019990' # valor do titulo
@@ -171,10 +172,10 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Itau do
 
       it 'informacoes devem estar posicionadas corretamente no detalhe opcional de multa' do
         detalhe_multa = itau.monta_detalhe_multa pagamento, 3
-                                                                          # Significado                        Posição     Picture
+        # Significado                        Posição     Picture
         expect(detalhe_multa[0]).to eq '2'                                # Identificação do reg. transação    [001..001]  9(001)
         expect(detalhe_multa[1]).to eq '1'                                # Código da multa                    [002..002]  X(001)
-        expect(detalhe_multa[2..9]).to eq Date.current.strftime('%d%m%Y')   # Data da multa                      [003..010]  9(008)
+        expect(detalhe_multa[2..9]).to eq Date.current.strftime('%d%m%Y') # Data da multa                      [003..010]  9(008)
         expect(detalhe_multa[10..22]).to eq '0000000000200'               # Valor da multa                     [011..023]  9(013)
         expect(detalhe_multa[23..393]).to eq ''.rjust(371, ' ')           # Complemento                        [024..394]  X(370)
         expect(detalhe_multa[394..399]).to eq '000003'                    # Número sequencial                  [395..400]  9(006)
@@ -183,6 +184,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Itau do
 
     context 'arquivo' do
       before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
+
       after { Timecop.return }
 
       it { expect(itau.gera_arquivo).to eq(read_remessa('remessa-itau-cnab400.rem', itau.gera_arquivo)) }
