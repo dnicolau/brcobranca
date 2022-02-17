@@ -2,7 +2,8 @@
 #
 module Brcobranca
   module Boleto
-    class BancoBrasil < Base # Banco do Brasil
+    # Banco do Brasil
+    class BancoBrasil < Base
       validates_length_of :agencia, maximum: 4, message: 'deve ser menor ou igual a 4 dígitos.'
       validates_length_of :conta_corrente, maximum: 8, message: 'deve ser menor ou igual a 8 dígitos.'
       validates_length_of :carteira, maximum: 2, message: 'deve ser menor ou igual a 2 dígitos.'
@@ -11,16 +12,16 @@ module Brcobranca
       validates_each :nosso_numero do |record, attr, value|
         valor_tamanho = value.to_s.size
         registro_tamanho = record.convenio.to_s.size
-        quantidade = if (valor_tamanho > 9) && (registro_tamanho == 8)
-                       '9'
-                     elsif (valor_tamanho > 10) && (registro_tamanho == 7)
-                       '10'
-                     elsif (valor_tamanho > 7) && (registro_tamanho == 4)
-                       '7'
-                     elsif (valor_tamanho > 5) && (registro_tamanho == 6) && !record.codigo_servico
-                       '5'
+        quantidade = if (valor_tamanho > 11) && (registro_tamanho == 4)
+                       '11'
+                     elsif (valor_tamanho > 11) && (registro_tamanho == 6) && !record.codigo_servico
+                       '11'
                      elsif (valor_tamanho > 17) && (registro_tamanho == 6) && record.codigo_servico
                        '17'
+                     elsif (valor_tamanho > 17) && (registro_tamanho == 7)
+                       '17'
+                     elsif (valor_tamanho > 9) && (registro_tamanho == 8)
+                       '9'
                      end
         record.errors.add attr, "deve ser menor ou igual a #{quantidade} dígitos." if quantidade
       end
@@ -103,7 +104,7 @@ module Brcobranca
                        codigo_servico ? 17 : 5
                      else
                        raise Brcobranca::NaoImplementado, 'Tipo de convênio não implementado.'
-        end
+                     end
         quantidade ? @nosso_numero.to_s.rjust(quantidade, '0') : @nosso_numero
       end
 
@@ -145,7 +146,8 @@ module Brcobranca
             "#{convenio}#{nosso_numero}#{agencia}#{conta_corrente}#{carteira}"
           else
             # Nosso Número de 17 dígitos com Convenio de 6 dígitos e sem nosso_numero, carteira 16 e 18
-            raise "Só é permitido emitir boletos com nosso número de 17 dígitos com carteiras 16 ou 18. Sua carteira atual é #{carteira}" unless %w(16 18).include?(carteira)
+            raise "Só é permitido emitir boletos com nosso número de 17 dígitos com carteiras 16 ou 18. Sua carteira atual é #{carteira}" unless %w[16 18].include?(carteira)
+
             "#{convenio}#{nosso_numero}21"
           end
         when 4 # Nosso Número de 7 dígitos com Convenio de 4 dígitos e sem nosso_numero
