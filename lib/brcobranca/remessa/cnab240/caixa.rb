@@ -100,11 +100,15 @@ module Brcobranca
         end
 
         def versao_layout_arquivo
-          '050'
+          '050' if convenio.to_s.size > 6
+
+          '101'
         end
 
         def versao_layout_lote
-          '030'
+          '030' if convenio.to_s.size > 6
+
+          '060'
         end
 
         def codigo_convenio
