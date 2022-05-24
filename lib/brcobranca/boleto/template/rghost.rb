@@ -25,6 +25,9 @@ module Brcobranca
         include RGhost unless include?(RGhost)
         RGhost::Config::GS[:external_encoding] = Brcobranca.configuration.external_encoding
 
+        # Habilitar em caso de problemas com permissão ao gerar local
+        # RGhost::Config::GS[:default_params] << '-dNOSAFER'
+
         # Gera o boleto em usando o formato desejado [:pdf, :jpg, :tif, :png, :ps, :laserjet, ... etc]
         #
         # @return [Stream]
@@ -247,7 +250,7 @@ module Brcobranca
           if boleto.variacao
             doc.show "#{boleto.carteira}-#{boleto.variacao}"
           else
-            doc.show boleto.carteira
+            doc.show boleto.try(:carteira_label).presence || boleto.carteira
           end
 
           move_more(doc, 2, 0)
