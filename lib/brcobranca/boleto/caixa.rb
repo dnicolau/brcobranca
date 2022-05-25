@@ -54,6 +54,10 @@ module Brcobranca
         @convenio = valor.to_s.rjust(6, '0') if valor
       end
 
+      def valor_documento
+        valor.to_f
+      end
+
       # Número seqüencial utilizado para identificar o boleto.
       # @return [String] 15 caracteres numéricos.
       def nosso_numero=(valor)
