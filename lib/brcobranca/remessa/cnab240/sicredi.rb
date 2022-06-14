@@ -32,6 +32,52 @@ module Brcobranca
           super(campos)
         end
 
+        def monta_segmento_p(pagamento, nro_lote, sequencial)
+          raise Brcobranca::RemessaInvalida, pagamento if pagamento.invalid?
+
+          #                                                             # DESCRICAO                             TAMANHO
+          segmento_p = cod_banco                                        # codigo banco                          3
+          segmento_p << nro_lote.to_s.rjust(4, '0')                     # lote de servico                       4
+          segmento_p << '3'                                             # tipo de registro                      1
+          segmento_p << sequencial.to_s.rjust(5, '0')                   # num. sequencial do registro no lote   5
+          segmento_p << 'P'                                             # cod. segmento                         1
+          segmento_p << ' '                                             # uso exclusivo                         1
+          segmento_p << pagamento.identificacao_ocorrencia              # cod. movimento remessa                2
+          segmento_p << agencia.to_s.rjust(5, '0')                      # agencia                               5
+          segmento_p << digito_agencia.to_s                             # dv agencia                            1
+          segmento_p << complemento_p(pagamento)                        # informacoes da conta                  34
+          segmento_p << codigo_carteira                                 # codigo da carteira                    1
+          segmento_p << forma_cadastramento                             # forma de cadastro do titulo           1
+          segmento_p << tipo_documento                                  # tipo de documento                     1
+          segmento_p << emissao_boleto                                  # identificaco emissao                  1
+          segmento_p << distribuicao_boleto                             # indentificacao entrega                1
+          segmento_p << numero(pagamento)                               # uso exclusivo                         4
+          segmento_p << pagamento.data_vencimento.strftime('%d%m%Y')    # data de venc.                         8
+          segmento_p << pagamento.formata_valor(15)                     # valor documento                       15
+          segmento_p << ''.rjust(5, '0')                                # agencia cobradora                     5
+          segmento_p << dv_agencia_cobradora                            # dv agencia cobradora                  1
+          segmento_p << pagamento.especie_titulo                        # especie do titulo                     2
+          segmento_p << aceite                                          # aceite                                1
+          segmento_p << pagamento.data_emissao.strftime('%d%m%Y')       # data de emissao titulo                8
+          segmento_p << pagamento.tipo_mora                             # cod. do mora                          1
+          segmento_p << data_mora(pagamento)                            # data mora                             8
+          segmento_p << pagamento.formata_valor_mora(15)                # valor mora                            15
+          segmento_p << codigo_desconto(pagamento)                      # cod. do desconto                      1
+          segmento_p << pagamento.formata_data_desconto('%d%m%Y')       # data desconto                         8
+          segmento_p << pagamento.formata_valor_desconto(15)            # valor desconto                        15
+          segmento_p << pagamento.formata_valor_iof(15)                 # valor IOF                             15
+          segmento_p << pagamento.formata_valor_abatimento(15)          # valor abatimento                      15
+          segmento_p << identificacao_titulo_empresa(pagamento)         # identificacao titulo empresa          25
+          segmento_p << pagamento.codigo_protesto                       # cod. para protesto                    1
+          segmento_p << pagamento.dias_protesto.to_s.rjust(2, '0')      # dias para protesto                    2
+          segmento_p << codigo_baixa(pagamento)                         # cod. para baixa                       1
+          segmento_p << dias_baixa(pagamento)                           # dias para baixa                       2
+          segmento_p << '09'                                            # cod. da moeda                         2
+          segmento_p << ''.rjust(10, '0')                               # uso exclusivo                         10
+          segmento_p << ' '                                             # uso exclusivo                         1
+          segmento_p
+        end
+
         def cod_banco
           '748'
         end
