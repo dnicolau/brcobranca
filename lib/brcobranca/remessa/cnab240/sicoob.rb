@@ -175,8 +175,8 @@ module Brcobranca
           segmento_r << "".rjust(8,  '0')                               # data desconto 3                      8
           segmento_r << "".rjust(15,  '0')                              # valor desconto 3                     15
           segmento_r << pagamento.codigo_multa                          # codigo multa                         1
-          segmento_r << data_multa(pagamento)                           # data multa                           8
-          segmento_r << pagamento.formata_percentual_multa(15)          # valor multa                          15
+          segmento_r << data_mora(pagamento)                            # data multa                           8
+          segmento_r << pagamento.formata_valor_mora(15)                # valor multa                          15
           segmento_r << ''.rjust(10, ' ')                               # info pagador                         10
           segmento_r << ''.rjust(40, ' ')                               # mensagem 3                           40
           segmento_r << ''.rjust(40, ' ')                               # mensagem 4                           40
@@ -191,6 +191,13 @@ module Brcobranca
           segmento_r << '0'                                             # Aviso débito automático              1
           segmento_r << ''.rjust(9, ' ')                                # Uso FEBRABAN                         9
           segmento_r
+        end
+
+        def data_mora(pagamento)
+          return "".rjust(8, "0") unless %w( 1 2 ).include? pagamento.tipo_mora
+          return "".rjust(8, "0") if pagamento.data_multa == pagamento.data_vencimento
+
+          pagamento.data_multa.strftime("%d%m%Y")
         end
 
         def data_multa(pagamento)
