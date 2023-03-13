@@ -23,4 +23,5 @@ group :test do
   gem 'simplecov'
   gem 'test-prof'
   gem 'timecop'
+  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 end
