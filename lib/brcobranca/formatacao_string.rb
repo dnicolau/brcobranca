@@ -13,7 +13,7 @@ module Brcobranca
       if data.size > size
         data.slice(0, size)
       else
-        clean_str.ljust(size, ' ')
+        data.ljust(size, ' ')
       end
     end
 

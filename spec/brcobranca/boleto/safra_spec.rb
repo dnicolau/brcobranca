@@ -32,7 +32,7 @@ RSpec.describe Brcobranca::Boleto::Safra do
     expect(boleto_novo.quantidade).to eq(1)
     expect(boleto_novo.valor).to eq(0.0)
     expect(boleto_novo.valor_documento).to eq(0.0)
-    expect(boleto_novo.local_pagamento).to eql('QUALQUER BANCO ATÉ O VENCIMENTO')
+    expect(boleto_novo.local_pagamento).to eql('Pagável em qualquer Banco do Sistema de Compensação')
   end
 
   it 'Criar nova instancia com atributos válidos' do
@@ -57,7 +57,7 @@ RSpec.describe Brcobranca::Boleto::Safra do
     expect(boleto_novo.agencia).to eql('4042')
     expect(boleto_novo.agencia_dv).to eql('8')
     expect(boleto_novo.convenio).to eq(12_387_989)
-    expect(boleto_novo.nosso_numero).to eql('77700168')
+    expect(boleto_novo.nosso_numero).to eql('077700168')
   end
 
   it 'Montar código de barras' do
@@ -71,7 +71,7 @@ RSpec.describe Brcobranca::Boleto::Safra do
     valid_attributes[:agencia_dv] = '0'
     boleto_novo = described_class.new(valid_attributes)
 
-    expect(boleto_novo.codigo_barras_segunda_parte).to eql('7004000002782472617300112')
+    expect(boleto_novo.codigo_barras_segunda_parte).to eql('7004000002782470261730012')
     expect(boleto_novo.codigo_barras).to eql('42296100100000180847004000002782472617300112')
     expect(boleto_novo.codigo_barras.linha_digitavel).to eql('42297.00408 00002.782472 26173.001129 6 10010000018084')
 
