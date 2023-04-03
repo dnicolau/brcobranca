@@ -175,7 +175,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasil do
         expect(detalhe[234..270]).to eq 'PABLO DIEGO JOSE FRANCISCO DE PAULA J' # nome do pagador
       end
     end
-
+    
     context 'arquivo' do
       before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
 

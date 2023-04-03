@@ -72,8 +72,8 @@ RSpec.describe Brcobranca::Boleto::Safra do
     boleto_novo = described_class.new(valid_attributes)
 
     expect(boleto_novo.codigo_barras_segunda_parte).to eql('7004000002782470261730012')
-    expect(boleto_novo.codigo_barras).to eql('42296100100000180847004000002782472617300112')
-    expect(boleto_novo.codigo_barras.linha_digitavel).to eql('42297.00408 00002.782472 26173.001129 6 10010000018084')
+    expect(boleto_novo.codigo_barras).to eql('42293100100000180847004000002782470261730012')
+    expect(boleto_novo.codigo_barras.linha_digitavel).to eql('42297.00408 00002.782472 02617.300120 3 10010000018084')
 
     valid_attributes[:valor] = 5543.05
     valid_attributes[:data_documento] = Date.parse('2016-03-30')
@@ -85,9 +85,9 @@ RSpec.describe Brcobranca::Boleto::Safra do
     valid_attributes[:agencia_dv] = '0'
     boleto_novo = described_class.new(valid_attributes)
 
-    expect(boleto_novo.codigo_barras_segunda_parte).to eql('7115000062767295015300452')
-    expect(boleto_novo.codigo_barras).to eql('42291674900005543057115000062767295015300452')
-    expect(boleto_novo.codigo_barras.linha_digitavel).to eql('42297.11504 00062.767298 50153.004523 1 67490000554305')
+    expect(boleto_novo.codigo_barras_segunda_parte).to eql('7115000062767290501530042')
+    expect(boleto_novo.codigo_barras).to eql('42291674900005543057115000062767290501530042')
+    expect(boleto_novo.codigo_barras.linha_digitavel).to eql('42297.11504 00062.767298 05015.300428 1 67490000554305')
   end
 
   it 'Não permitir gerar boleto com atributos inválido' do
@@ -100,15 +100,15 @@ RSpec.describe Brcobranca::Boleto::Safra do
     boleto_novo = described_class.new(valid_attributes)
 
     boleto_novo.nosso_numero = '94550200'
-    expect(boleto_novo.nosso_numero_boleto).to eql('94550200-1')
-    expect(boleto_novo.nosso_numero_dv).to eq(1)
+    expect(boleto_novo.nosso_numero_boleto).to eql('094550200')
+    expect(boleto_novo.nosso_numero_dv).to eq(4)
 
     boleto_novo.nosso_numero = '93199999'
-    expect(boleto_novo.nosso_numero_boleto).to eql('93199999-5')
-    expect(boleto_novo.nosso_numero_dv).to eq(5)
+    expect(boleto_novo.nosso_numero_boleto).to eql('093199999')
+    expect(boleto_novo.nosso_numero_dv).to eq(2)
 
     boleto_novo.nosso_numero = '26173001'
-    expect(boleto_novo.nosso_numero_boleto).to eql('26173001-1')
+    expect(boleto_novo.nosso_numero_boleto).to eql('026173001')
     expect(boleto_novo.nosso_numero_dv).to eq(1)
   end
 
