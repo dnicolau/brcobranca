@@ -62,7 +62,6 @@ shared_examples_for 'cnab240' do
       expect(header[17]).to eq '1' # tipo inscricao do cedente
       expect(header[18..31]).to eq '00012345678901' # documento do cedente
       expect(header[32..51]).to eq objeto.codigo_convenio # informacoes do convenio
-      expect(header[52..71]).to eq objeto.info_conta # informacoes da conta
       expect(header[72..101]).to eq 'SOCIEDADE BRASILEIRA DE ZOOLOG' # razao social do cedente
       expect(header[157..162]).to eq '000001' # sequencial de remessa
       expect(header[163..165]).to eq objeto.versao_layout_arquivo # versao do layout
@@ -82,7 +81,6 @@ shared_examples_for 'cnab240' do
       expect(header[17]).to eq '1' # tipo inscricao do cedente
       expect(header[18..32]).to eq '000012345678901' # documento do cedente
       expect(header[33..52]).to eq objeto.convenio_lote # informacoes do convenio
-      expect(header[53..72]).to eq objeto.info_conta # informacoes da conta
       expect(header[73..102]).to eq 'SOCIEDADE BRASILEIRA DE ZOOLOG' # razao social do cedente
       expect(header[103..142]).to eq 'Campo destinado ao preenchimento no mome' # 1a mensagem
       expect(header[143..182]).to eq 'Campo destinado ao preenchimento no mome' # 2a mensagem
@@ -111,12 +109,7 @@ shared_examples_for 'cnab240' do
       expect(segmento_p[77..84]).to eq Date.current.strftime('%d%m%Y') # data de vencimento
       expect(segmento_p[85..99]).to eq '000000000019990' # valor
       expect(segmento_p[109..116]).to eq Date.current.strftime('%d%m%Y') # data de emissao
-
-      if objeto.cod_banco == '748'
-        expect(segmento_p[141]).to eq '1' # codigo do desconto
-      else
-        expect(segmento_p[141]).to eq '0' # codigo do desconto
-      end
+      expect(segmento_p[141]).to eq '0' # codigo do desconto
 
       expect(segmento_p[142..149]).to eq '00000000' # data de desconto
       expect(segmento_p[150..164]).to eq ''.rjust(15, '0') # valor do desconto

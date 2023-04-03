@@ -32,3 +32,4 @@ pkg/*.8
 doc
 doc/*.*
 Gemfile.lock
+.byebug_history

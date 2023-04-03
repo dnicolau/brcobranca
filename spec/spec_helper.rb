@@ -10,6 +10,7 @@ require 'timecop'
 require 'tempfile'
 require 'brcobranca'
 require 'rghost'
+require 'byebug'
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
