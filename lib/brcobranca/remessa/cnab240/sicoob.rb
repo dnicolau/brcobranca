@@ -176,7 +176,7 @@ module Brcobranca
           segmento_r << "".rjust(15,  '0')                              # valor desconto 3                     15
           segmento_r << pagamento.codigo_multa                          # codigo multa                         1
           segmento_r << data_mora(pagamento)                            # data multa                           8
-          segmento_r << pagamento.formata_valor_mora(15)                # valor multa                          15
+          segmento_r << pagamento.formata_percentual_multa(15)          # valor multa                          15
           segmento_r << ''.rjust(10, ' ')                               # info pagador                         10
           segmento_r << ''.rjust(40, ' ')                               # mensagem 3                           40
           segmento_r << ''.rjust(40, ' ')                               # mensagem 4                           40
