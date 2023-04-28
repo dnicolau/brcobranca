@@ -105,7 +105,7 @@ module Brcobranca
           detalhe << conta_corrente.to_s.rjust(8, '0')                        # conta corrente                    9[08] 023 a 030
           detalhe << conta_corrente_dv.to_s                                   # digito conta corrente             X[01] 031 a 031
           detalhe << convenio.to_s.rjust(7, '0')                              # convenio de cobranca da empresa   9[07] 032 a 038
-          detalhe << pagamento.documento.ljust(25, ' ')                       # controle do participante          X[25] 039 a 063
+          detalhe << pagamento.documento.ljust(25, ' ').format_size(25)      # controle do participante          X[25] 039 a 063
           detalhe << convenio.to_s.rjust(7, '0')                              # convenio (montagem nosso numero)  9[07] 064 a 070
           detalhe << pagamento.nosso_numero.to_s.rjust(10, '0')               # nosso numero                      9[10] 071 a 080
           detalhe << '00'                                                     # numero da prestacao (zeros)       9[02] 081 a 082
@@ -119,7 +119,7 @@ module Brcobranca
           detalhe << tipo_cobranca.to_s.ljust(5, ' ')                         # tipo de cobranca                  9[05] 102 a 106
           detalhe << carteira                                                 # carteira                          9[02] 107 a 108
           detalhe << '01'                                                     # comando (01 = registro de titulo) 9[02] 109 a 110
-          detalhe << pagamento.documento.to_s.rjust(10, '0')                  # numero atribuido pela empresa     X[10] 111 a 120
+          detalhe << pagamento.documento.to_s.rjust(10, '0').format_size(10)  # numero atribuido pela empresa     X[10] 111 a 120
           detalhe << pagamento.data_vencimento.strftime('%d%m%y')             # data de vencimento                9[06] 121 a 126
           detalhe << pagamento.formata_valor                                  # valor do titulo                   9[13] 127 a 139
           detalhe << cod_banco                                                # numero do banco                   9[03] 140 a 142
