@@ -13,7 +13,7 @@ module Brcobranca
 
       # Validações
       # Modalidade/Carteira de Cobrança (1-Registrada | 2-Sem Registro)
-      validates_length_of :carteira, is: 1, message: 'deve possuir 1 dígitos.'
+      # validates_length_of :carteira, is: 1, message: 'deve possuir 1 dígitos.'
       # Emissão do boleto (4-Beneficiário)
       validates_length_of :emissao, is: 1, message: 'deve possuir 1 dígitos.'
       validates_length_of :convenio, in: 6..7, message: 'deve possuir 6 ou 7 dígitos.'
