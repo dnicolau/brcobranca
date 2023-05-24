@@ -29,7 +29,7 @@ module Brcobranca
         #     ‘4’ = Sacado via SMS
 
         validates_presence_of :digito_agencia, :convenio, message: 'não pode estar em branco.'
-        validates_length_of :convenio, maximum: 6, message: 'deve ter 6 dígitos.'
+        validates_length_of :convenio, in: 6..7, message: 'deve possuir 6 ou 7 dígitos.'
         validates_length_of :versao_aplicativo, maximum: 4, message: 'deve ter 4 dígitos.'
         validates_length_of :digito_agencia, is: 1, message: 'deve ter 1 dígito.'
         validates_length_of :modalidade_carteira, is: 2, message: 'deve ter 2 dígitos.'
@@ -84,7 +84,7 @@ module Brcobranca
         end
 
         def convenio=(valor)
-          @convenio = valor.to_s.rjust(6, '0') if valor
+          @convenio = valor.to_s.rjust(7, '0') if valor
         end
 
         def versao_aplicativo=(valor)
@@ -100,13 +100,13 @@ module Brcobranca
         end
 
         def versao_layout_arquivo
-          '050' if convenio.to_s.size > 6
+          '050' if convenio.to_s.size > 7
 
           '101'
         end
 
         def versao_layout_lote
-          '030' if convenio.to_s.size > 6
+          '030' if convenio.to_s.size > 7
 
           '060'
         end
@@ -124,7 +124,7 @@ module Brcobranca
         end
 
         def convenio_lote
-          "#{convenio.rjust(6, '0')}#{''.rjust(14, '0')}"
+          "#{convenio.rjust(7, '0')}#{''.rjust(13, '0')}"
         end
 
         def info_conta
@@ -134,7 +134,7 @@ module Brcobranca
           # cod. convenio    6
           # uso CAIXA        7
           # uso CAIXA        1
-          "#{agencia.to_s.rjust(5, '0')}#{digito_agencia}#{convenio}#{''.rjust(7, '0')}0"
+          "#{agencia.to_s.rjust(5, '0')}#{digito_agencia}#{convenio}#{''.rjust(8, '0')}"
         end
 
         def complemento_header
