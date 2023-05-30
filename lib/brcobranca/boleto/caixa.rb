@@ -49,7 +49,7 @@ module Brcobranca
       # Número do convênio/contrato do cliente junto ao banco.
       # @return [String] 6 caracteres numéricos.
       def convenio=(valor)
-        @convenio = valor.to_s.rjust(7, '0') if valor
+        @convenio = valor.to_s.rjust(6, '0') if valor
       end
 
       def valor_documento
