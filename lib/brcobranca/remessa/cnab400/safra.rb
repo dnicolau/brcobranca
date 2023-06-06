@@ -36,7 +36,7 @@ module Brcobranca
           # Data Gravação           Data Da Geração Do Arquivo REMESSA 9(06) 95 100 dd/mm/aa
           # Brancos                 Brancos X(291) 101 391 Brancos
           # Núm. Arquivo            Número Seqüencial De Geração Do Arquivo 9(03) 392 394 Num. Arquivo
-          # Núm. Registro           Número Seqüencial Do Registro No Arquivo 9(06) 395 400 "000001" 
+          # Núm. Registro           Número Seqüencial Do Registro No Arquivo 9(06) 395 400 "000001"
 
           "01REMESSA01Cobrança       #{info_conta}      #{empresa_mae.format_size(30)}#{cod_banco}#{nome_banco}    #{data_geracao}#{complemento}#{sequencial_remessa}000001"
         end
@@ -156,7 +156,7 @@ module Brcobranca
         # Quantidade Quantidade De Títulos Existentes Arquivo 9(08) 369 376
         # Valor Total Valor Total Dos Títulos 9(13)V99 377 391
         # Núm. Arquivo Número Seqüencial De Geração Do Arquivo 9(03) 392 394
-        # Último Numero Num. Seqüencial Número Seqüencial Do Registro No Arquivo 9(06) 395 400 De Seq + 1 
+        # Último Numero Num. Seqüencial Número Seqüencial Do Registro No Arquivo 9(06) 395 400 De Seq + 1
 
         # Trailer do arquivo remessa
         #
@@ -170,7 +170,7 @@ module Brcobranca
           # identificacao registro  [1]      9
           # complemento             [393]
           # num. sequencial         [6]
-          "9#{''.rjust(367, ' ')}#{pagamentos.count.to_s.rjust(8, '0')}#{sprintf('%.2f', pagamentos.sum(&:valor)).delete('.').rjust(13, '0')}#{sequencial_remessa.to_s.rjust(3, '0')}#{sequencial.to_s.rjust(6, '0')}"
+          "9#{''.rjust(367, ' ')}#{pagamentos.count.to_s.rjust(8, '0')}#{sprintf('%.2f', pagamentos.sum(&:valor)).delete('.').rjust(15, '0')}#{sequencial_remessa.to_s.rjust(3, '0')}#{sequencial.to_s.rjust(6, '0')}"
         end
       end
     end
