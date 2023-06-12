@@ -142,7 +142,7 @@ module Brcobranca
         def monta_segmento_p(pagamento, nro_lote, sequencial)
           segmento_p = ''
           #                                                             # DESCRICAO                             TAMANHO
-          segmento_p += cod_banco # codigo banco                          3
+          segmento_p += cod_banco                                       # codigo banco                          3
           segmento_p << nro_lote.to_s.rjust(4, '0')                     # lote de servico                       4
           segmento_p << '3'                                             # tipo de registro                      1
           segmento_p << sequencial.to_s.rjust(5, '0')                   # num. sequencial do registro no lote   5

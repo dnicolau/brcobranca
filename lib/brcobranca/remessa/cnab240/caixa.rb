@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Brcobranca
   module Remessa
     module Cnab240
@@ -31,7 +29,7 @@ module Brcobranca
         #     ‘4’ = Sacado via SMS
 
         validates_presence_of :digito_agencia, :convenio, message: 'não pode estar em branco.'
-        validates_length_of :convenio, maximum: 6, message: 'deve ter 6 dígitos.'
+        validates_length_of :convenio, maximum: 7, message: 'deve ter até 7 dígitos.'
         validates_length_of :versao_aplicativo, maximum: 4, message: 'deve ter 4 dígitos.'
         validates_length_of :digito_agencia, is: 1, message: 'deve ter 1 dígito.'
         validates_length_of :modalidade_carteira, is: 2, message: 'deve ter 2 dígitos.'
@@ -45,6 +43,34 @@ module Brcobranca
                      distribuicao_boleto: '0',
                      especie_titulo: '99' }.merge!(campos)
           super(campos)
+        end
+
+        def monta_header_lote(nro_lote)
+          header_lote = ''                                      # CAMPO                   TAMANHO
+          header_lote += cod_banco                              # codigo banco            3
+          header_lote << nro_lote.to_s.rjust(4, '0')            # lote servico            4
+          header_lote << '1'                                    # tipo de registro        1
+          header_lote << 'R'                                    # tipo de operacao        1
+          header_lote << '01'                                   # tipo de servico         2
+          header_lote << exclusivo_servico                      # uso exclusivo           2
+          header_lote << versao_layout_lote                     # num.versao layout lote  3
+          header_lote << ' '                                    # uso exclusivo           1
+          header_lote << Brcobranca::Util::Empresa.new(documento_cedente, false).tipo # tipo de inscricao       1
+          header_lote << documento_cedente.to_s.rjust(15, '0')  # inscricao cedente       15
+          header_lote << convenio_lote                          # codigo do convenio      20
+          header_lote << agencia.to_s.rjust(5, '0')             # Agência da conta        5
+          header_lote << digito_agencia.to_s                    # Digito da Agência da conta    1
+          header_lote << header_convenio                        # Número convenio por digito    6
+          header_lote << '0000000'                              # Código personalizado    7
+          header_lote << '0'                                    # informacoes conta       20
+          header_lote << empresa_mae.format_size(30)            # nome empresa            30
+          header_lote << mensagem_1.to_s.format_size(40)        # 1a mensagem             40
+          header_lote << mensagem_2.to_s.format_size(40)        # 2a mensagem             40
+          header_lote << sequencial_remessa.to_s.rjust(8, '0')  # numero remessa          8
+          header_lote << data_geracao                           # data gravacao           8
+          header_lote << ''.rjust(8, '0')                       # data do credito         8
+          header_lote << ''.rjust(33, ' ')                      # complemento             33
+          header_lote
         end
 
         # Monta o registro segmento Q do arquivo
@@ -77,7 +103,7 @@ module Brcobranca
           segmento_q << pagamento.cidade_sacado.format_size(15)         # cidade                               15
           segmento_q << pagamento.uf_sacado                             # uf                                   2
           segmento_q << pagamento.identificacao_avalista(false)         # identificacao do sacador             1
-          segmento_q << pagamento.documento_avalista.to_s.rjust(15, '0')# documento sacador                    15
+          segmento_q << pagamento.documento_avalista.to_s.rjust(15, '0') # documento sacador                    15
           segmento_q << pagamento.nome_avalista.format_size(40)         # nome avalista                        40
           segmento_q << ''.rjust(3, ' ')                                # cod. banco correspondente            3
           segmento_q << ''.rjust(20, ' ')                               # nosso numero banco correspondente    20
@@ -102,9 +128,13 @@ module Brcobranca
         end
 
         def versao_layout_arquivo
-          '050' if convenio.to_s.size > 6
-
-          '101'
+          if convenio.to_s.size < 6
+            '050'
+          elsif convenio.to_i <= 1_000_000
+            '101'
+          elsif convenio.to_i >= 1_000_000
+            '107'
+          end
         end
 
         def versao_layout_lote
@@ -126,17 +156,34 @@ module Brcobranca
         end
 
         def convenio_lote
-          "#{convenio.rjust(6, '0')}#{''.rjust(14, '0')}"
+          if versao_layout_arquivo == '107'
+            "#{convenio}#{''.rjust(13, '0')}"
+          else
+            "#{convenio.rjust(6, '0')}#{''.rjust(14, '0')}"
+          end
         end
 
         def info_conta
+          versao_layout_arquivo == '101' ? info_conta_101 : info_conta_107
+        end
+
+        def info_conta_101
           # CAMPO            # TAMANHO
           # agencia          5
           # digito agencia   1
           # cod. convenio    6
           # uso CAIXA        7
           # uso CAIXA        1
+
           "#{agencia.to_s.rjust(5, '0')}#{digito_agencia}#{convenio}#{''.rjust(7, '0')}0"
+        end
+
+        def info_conta_107
+          "#{agencia.to_s.rjust(5, '0')}#{digito_agencia}#{convenio}#{''.rjust(6, '0')}0"
+        end
+
+        def header_convenio
+          versao_layout_arquivo == '107' ? '000000' : convenio
         end
 
         def complemento_header
@@ -162,9 +209,16 @@ module Brcobranca
           # uso CAIXA             11
           # modalidade carteira   2
           # ident. titulo         15
-          "#{convenio.rjust(6,
-                            '0')}#{''.rjust(11,
-                                            '0')}#{modalidade_carteira}#{pagamento.nosso_numero.to_s.rjust(15, '0')}"
+          parte_convenio = if versao_layout_arquivo == '107'
+                             "#{convenio}#{''.rjust(
+                               10, '0'
+                             )}"
+                           else
+                             "#{convenio.rjust(6,
+                                               '0')}#{''.rjust(11,
+                                                               '0')}"
+                           end
+          "#{parte_convenio}#{modalidade_carteira}#{pagamento.nosso_numero.to_s.rjust(15, '0')}"
         end
 
         def complemento_r

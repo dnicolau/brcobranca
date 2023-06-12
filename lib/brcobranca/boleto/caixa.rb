@@ -108,19 +108,20 @@ module Brcobranca
       #  25: dígito verificador do campo livre
       # @return [String]
       def codigo_barras_segunda_parte
-        campo_livre = "#{convenio}" \
-                      "#{convenio_dv}" \
+        campo_livre = "#{numero_convenio_boleto}" \
                       "#{nosso_numero_boleto[2..4]}" \
                       "#{nosso_numero_boleto[0..0]}" \
                       "#{nosso_numero_boleto[5..7]}" \
                       "#{nosso_numero_boleto[1..1]}" \
                       "#{nosso_numero_boleto[8..16]}"
 
-        campo_livre.to_s +
-          campo_livre.modulo11(
-            multiplicador: (2..9).to_a,
-            mapeamento: { 10 => 0, 11 => 0 }
-          ) { |total| 11 - (total % 11) }.to_s
+        campo_livre.to_s + campo_livre.modulo11(multiplicador: (2..9).to_a, mapeamento: { 10 => 0, 11 => 0 }) do |total|
+                             11 - (total % 11)
+                           end.to_s
+      end
+
+      def numero_convenio_boleto
+        convenio.to_s.size == 6 ? "#{convenio}#{convenio_dv}" : convenio
       end
     end
   end

@@ -62,11 +62,6 @@ RSpec.describe Brcobranca::Boleto::Caixa do # :nodoc:[all]
     expect { boleto_novo.codigo_barras }.to raise_error(Brcobranca::BoletoInvalido)
   end
 
-  xit 'Tamanho do número de convênio deve ser de 6 dígitos' do
-    boleto_novo = described_class.new @valid_attributes.merge(convenio: '1234567')
-    expect(boleto_novo).not_to be_valid
-  end
-
   it 'Número do convênio deve ser preenchido com zeros à esquerda quando menor que 6 dígitos' do
     boleto_novo = described_class.new @valid_attributes.merge(convenio: '12345')
     expect(boleto_novo.convenio).to eq('012345')
