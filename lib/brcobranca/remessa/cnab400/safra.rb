@@ -96,11 +96,13 @@ module Brcobranca
         def formata_endereco_sacado(pgto)
           endereco = "#{pgto.endereco_sacado}, #{pgto.cidade_sacado}/#{pgto.uf_sacado}"
           return endereco.ljust(40, ' ') if endereco.size <= 40
+
           "#{pgto.endereco_sacado[0..19]} #{pgto.cidade_sacado[0..14]}/#{pgto.uf_sacado}".format_size(40)
         end
 
         def monta_detalhe(pagamento, sequencial)
           raise Brcobranca::RemessaInvalida, pagamento if pagamento.invalid?
+
           cod_banco_cobranca = banco_cobranca.presence || '422'
 
           detalhe = '1'                                               # identificacao do registro                   9[01]       001 a 001
@@ -114,7 +116,7 @@ module Brcobranca
           detalhe << '0'                                              # Código Iof Operações De Seguro              9[01]       102 a 102
           detalhe << '00'                                             # Identificação Do Tipo De Moeda              9[02]       103 a 104
           detalhe << ''.rjust(1, ' ')                                 # Brancos                                     X[01]       105 a 105
-          detalhe << pagamento.dias_protesto.to_s.ljust(2, '0')       # Terceira Instrução De Cobrança              9[02]       106 a 107
+          detalhe << dias_protesto_formatted(pagamento)               # Terceira Instrução De Cobrança              9[02]       106 a 107
           detalhe << carteira                                         # carteira                                    9[01]       108 a 108
           detalhe << pagamento.identificacao_ocorrencia               # identificacao ocorrencia                    9[02]       109 a 110
           detalhe << pagamento.documento_ou_numero.to_s.ljust(10, ' ').format_size(10)# num. controle                         X[10]       111 a 120
@@ -171,6 +173,12 @@ module Brcobranca
           # complemento             [393]
           # num. sequencial         [6]
           "9#{''.rjust(367, ' ')}#{pagamentos.count.to_s.rjust(8, '0')}#{sprintf('%.2f', pagamentos.sum(&:valor)).delete('.').rjust(15, '0')}#{sequencial_remessa.to_s.rjust(3, '0')}#{sequencial.to_s.rjust(6, '0')}"
+        end
+
+        def dias_protesto_formatted(pagamento)
+          return pagamento.dias_protesto.to_s.rjust(2, '0') if pagamento.cod_segunda_instrucao == '10'
+
+          '00'
         end
       end
     end
