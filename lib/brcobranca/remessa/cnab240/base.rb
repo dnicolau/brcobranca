@@ -81,7 +81,7 @@ module Brcobranca
           header_arquivo << documento_cedente.to_s.rjust(14, '0') # numero de inscricao         14
           header_arquivo << codigo_convenio                     # codigo do convenio no banco   20
           header_arquivo << info_conta[0...-1]                  # informacoes da conta          19
-          header_arquivo << '0'                                 # informacoes da conta          1
+          header_arquivo << agencia_conta_corrente_dv           # informacoes da conta          1
           header_arquivo << empresa_mae.format_size(30)         # nome da empresa               30
           header_arquivo << nome_banco.format_size(30)          # nome do banco                 30
           header_arquivo << ''.rjust(10, ' ')                   # uso exclusivo FEBRABAN        10
@@ -522,6 +522,10 @@ module Brcobranca
         end
 
         def dv_agencia_cobradora
+          '0'
+        end
+
+        def agencia_conta_corrente_dv
           '0'
         end
       end
