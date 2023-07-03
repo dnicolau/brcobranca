@@ -133,7 +133,9 @@ module Brcobranca
           detalhe << pagamento.formata_data_desconto                  # data desconto                               9[06]       174 a 179
           detalhe << pagamento.formata_valor_desconto                 # valor desconto                              9[13]       180 a 192
           detalhe << pagamento.formata_valor_iof                      # valor iof                                   9[13]       193 a 205
-          detalhe << pagamento.formata_valor_abatimento               # valor abatimento                            9[13]       206 a 218
+          detalhe << pagamento.formata_data_multa                     # data multa                                  9[06]       206 a 211
+          detalhe << pagamento.formata_valor_multa(4)                 # percentual multa                            9[04]       212 a 215
+          detalhe << '000'                                            # filler multa                                9[02]       216 a 218
           detalhe << pagamento.identificacao_sacado                   # identificacao do pagador                    9[02]       219 a 220
           detalhe << pagamento.documento_sacado.to_s.rjust(14, '0')   # cpf/cnpj do pagador                         9[14]       221 a 234
           detalhe << pagamento.nome_sacado.format_size(40)            # nome do pagador                             9[40]       235 a 274

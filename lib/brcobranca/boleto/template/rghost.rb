@@ -256,11 +256,7 @@ module Brcobranca
           if boleto.variacao
             doc.show "#{boleto.carteira}-#{boleto.variacao}"
           else
-            begin
-              doc.show boleto.carteira_label
-            rescue => e
-              doc.show boleto.carteira
-            end
+            doc.show boleto.try(:carteira_label).presence || boleto.carteira
           end
 
           move_more(doc, 2, 0)
