@@ -138,7 +138,7 @@ module Brcobranca
         end
 
         def versao_layout_lote
-          '030' if convenio.to_s.size > 6
+          return '067' if convenio.to_s.size > 6
 
           '060'
         end
