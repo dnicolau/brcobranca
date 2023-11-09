@@ -236,8 +236,8 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
         expect(caixa.versao_layout_arquivo).to eq '107'
       end
 
-      it 'versao do layout do lote deve ser 060 para convenio até 7 dígitos' do
-        expect(caixa.versao_layout_lote).to eq '060'
+      it 'versao do layout do lote deve ser 067 para convenio até 7 dígitos' do
+        expect(caixa.versao_layout_lote).to eq '067'
       end
 
       it 'codigo do convenio deve ser 20 zeros' do
