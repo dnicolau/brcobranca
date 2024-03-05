@@ -225,7 +225,7 @@ module Brcobranca
           # valor total titulos [13]
           # zeros               [374]     0
           # num. sequencial     [6]
-          "9#{sequencial.to_s.rjust(6, '0')}#{total_titulos}#{''.rjust(374, '0')}#{sequencial.to_s.rjust(6, '0')}"
+          "9#{pagamentos.count.to_s.rjust(6, '0')}#{total_titulos}#{''.rjust(374, '0')}#{sequencial.to_s.rjust(6, '0')}"
         end
       end
     end

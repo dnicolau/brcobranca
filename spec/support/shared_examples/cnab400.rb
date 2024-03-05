@@ -143,7 +143,7 @@ shared_examples_for 'cnab400' do
         expect(trailer[27..39]).to eq '0000000019990'       # total geral
         expect(trailer[40..393]).to eq ''.rjust(354, ' ')   # brancos
       elsif subject.instance_of?(Brcobranca::Remessa::Cnab400::Santander)
-        expect(trailer[1..6]).to eq '000003'                # numero sequencial do registro
+        expect(trailer[1..6]).to eq '000001'                # numero sequencial do registro
         expect(trailer[7..19]).to eq '0000000019990'        # total
         expect(trailer[20..393]).to eq ''.rjust(374, '0')   # zeros
       elsif subject.instance_of?(Brcobranca::Remessa::Cnab400::Sicoob)
