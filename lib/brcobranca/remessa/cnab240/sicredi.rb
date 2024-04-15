@@ -51,7 +51,7 @@ module Brcobranca
           segmento_p << tipo_documento                                  # tipo de documento                     1
           segmento_p << emissao_boleto                                  # identificaco emissao                  1
           segmento_p << distribuicao_boleto                             # indentificacao entrega                1
-          segmento_p << numero(pagamento)                               # uso exclusivo                         4
+          segmento_p << formata_numero_documento(pagamento, 15)         # uso exclusivo                         15
           segmento_p << pagamento.data_vencimento.strftime('%d%m%Y')    # data de venc.                         8
           segmento_p << pagamento.formata_valor(15)                     # valor documento                       15
           segmento_p << ''.rjust(5, '0')                                # agencia cobradora                     5
@@ -214,6 +214,11 @@ module Brcobranca
           return ''.rjust(8, '0') unless %w[1 2].include? pagamento.tipo_mora
 
           pagamento.data_vencimento.next_day.strftime('%d%m%Y')
+        end
+
+        def formata_numero_documento(pagamento, tamanho = 15)
+          documento = pagamento.documento_ou_numero.to_s.gsub(/[^0-9A-Za-z ]/, '')
+          documento.ljust(tamanho, ' ')
         end
 
         private
