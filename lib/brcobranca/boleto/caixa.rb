@@ -30,7 +30,7 @@ module Brcobranca
           emissao: '4'
         }.merge!(campos)
 
-        campos[:local_pagamento] = 'PREFERENCIALMENTE NAS CASAS LOTÉRICAS ATÉ O VALOR LIMITE'
+        campos[:local_pagamento] = 'EM TODA A REDE BANCÁRIA E SEUS CORRESPONDENTES ATÉ O VALOR LIMITE'
 
         super(campos)
       end
