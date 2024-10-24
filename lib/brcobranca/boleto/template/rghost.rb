@@ -296,7 +296,7 @@ module Brcobranca
           move_more(doc, 0, -0.4)
           doc.show boleto.sacado_endereco.to_s
 
-          move_more(doc, 1.2, -0.93)
+          move_more(doc, 1.7, -0.93)
           doc.show "#{boleto.avalista} - #{boleto.avalista_documento}" if boleto.avalista && boleto.avalista_documento
           # FIM Segunda parte do BOLETO
         end
