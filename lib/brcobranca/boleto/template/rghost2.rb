@@ -7,7 +7,7 @@ begin
     gem 'rghost'
     require 'rghost'
   end
-  
+
   begin
     require 'rghost_barcode'
   rescue LoadError
@@ -15,7 +15,7 @@ begin
     gem 'rghost_barcode'
     require 'rghost_barcode'
   end
-  
+
   module Brcobranca
     module Boleto
       module Template
@@ -26,8 +26,8 @@ begin
           RGhost::Config::GS[:external_encoding] = Brcobranca.configuration.external_encoding
           RGhost::Config::GS[:default_params] << '-dNOSAFER'
           RGhost::Config::GS[:unit]=Units::Cm
-  
-  
+
+
           # Gera o boleto em usando o formato desejado [:pdf, :jpg, :tif, :png, :ps, :laserjet, ... etc]
           #
           # @return [Stream]
@@ -36,7 +36,7 @@ begin
           def to(formato, options = {})
             modelo_generico(self, options.merge!(formato: formato))
           end
-  
+
           # Gera o boleto em usando o formato desejado [:pdf, :jpg, :tif, :png, :ps, :laserjet, ... etc]
           #
           # @return [Stream]
@@ -45,7 +45,7 @@ begin
           def lote(boletos, options = {})
             modelo_generico_multipage(boletos, options)
           end
-  
+
           #  Cria o métodos dinâmicos (to_pdf, to_gif e etc) com todos os fomátos válidos.
           #
           # @return [Stream]
@@ -60,9 +60,9 @@ begin
               super
             end
           end
-  
+
           private
-  
+
           # Retorna um stream pronto para gravação em arquivo.
           #
           # @return [Stream]
@@ -83,7 +83,7 @@ begin
             resolucao = (options.delete(:resolucao) || Brcobranca.configuration.resolucao)
             doc.render_stream(formato.to_sym, resolution: resolucao)
           end
-  
+
           # Retorna um stream para multiplos boletos pronto para gravação em arquivo.
           #
           # @return [Stream]
@@ -108,12 +108,12 @@ begin
             resolucao = (options.delete(:resolucao) || Brcobranca.configuration.resolucao)
             doc.render_stream(formato.to_sym, resolution: resolucao)
           end
-  
+
           # Define o template a ser usado no boleto
           def modelo_generico_template(doc, _boleto, template_path)
             doc.define_template(:template, template_path, x: '0.732 cm', y: '3.48 cm')
             doc.use_template :template
-  
+
             doc.define_tags do
               tag :menor, name: "LiberationMono", size: 8
               tag :menor2, name: "LiberationMono", size: 6
@@ -122,7 +122,7 @@ begin
               tag :maior, name: "Helvetica-Bold", size: 13.5
             end
           end
-  
+
           # Monta Recibo do Beneficiário
           def modelo_recibo_beneficiario(doc, boleto)
             doc.moveto x:  4.28, y: 26.87
@@ -142,7 +142,7 @@ begin
             doc.moveto x:  4.28, y: 22.95
             doc.show boleto.valor_documento.to_currency, tag: :menor
           end
-  
+
           # Monta Recibo do Pagador boleto
           def modelo_generico_cabecalho(doc, boleto)
             monta_logotipo(doc, boleto, 0.782, 19.717, 0.85)
@@ -168,7 +168,7 @@ begin
             doc.moveto x:  1.109, y: 17.089
             doc.show truncar(boleto.sacado, 109), tag: :menor
           end
-  
+
           # Monta o corpo e rodapé do layout do boleto
           def modelo_generico_rodape(doc, boleto)
             monta_logotipo(doc, boleto, 0.782, 13.9, 0.85)
@@ -210,7 +210,7 @@ begin
             doc.text_area pagador, width: 18, text_align: :left, x: 2.04611, y: 5.8, row_height: '0.4 cm'
             avalista = "#{truncar(boleto.avalista,46)} - CPF/CNPJ:  #{boleto.avalista_documento.formata_documento.to_s}" if boleto.avalista && boleto.avalista_documento
             if avalista
-              doc.text_area "<menor2>#{avalista}</menor2>", width: 12.312, text_align: :left, x: 2.04611, y: 4.3, row_height: '0.4 cm'
+              doc.text_area "<menor2>#{avalista}</menor2>", width: 12.312, text_align: :left, x: 2.3, y: 4.3, row_height: '0.4 cm'
             end
             # Gerando codigo de barra com rghost_barcode
             if boleto.codigo_barras
@@ -252,4 +252,3 @@ begin
       end
     end
   end
-  
