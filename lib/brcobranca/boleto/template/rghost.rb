@@ -74,7 +74,7 @@ module Brcobranca
         def modelo_generico(boleto, options = {})
           doc = Document.new paper: :A4 # 210x297
 
-          template_path = File.join(File.dirname(__FILE__), '..', '..', 'arquivos', 'templates', 'modelo_generico_1.eps')
+          template_path = File.join(File.dirname(__FILE__), '..', '..', 'arquivos', 'templates', 'modelo_generico.eps')
 
           raise 'Não foi possível encontrar o template. Verifique o caminho' unless File.exist?(template_path)
 
