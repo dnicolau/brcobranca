@@ -18,7 +18,7 @@ module Brcobranca
         # Nova instancia do CrediSIS
         def initialize(campos = {})
           campos = { aceite: 'N' }.merge!(campos)
-          super(campos)
+          super
         end
 
         def agencia=(valor)
@@ -46,7 +46,29 @@ module Brcobranca
         end
 
         def nome_banco
-          'CENTRALCRED'.ljust(15, ' ')
+          'CENTRALCREDI'.ljust(15, ' ')
+        end
+
+        # Header do arquivo remessa
+        #
+        # @return [String]
+        #
+        def monta_header
+          header = +'0'                         # tipo do registro      [01]   0
+          header << '1'                         # operacao              [01]   1
+          header << 'REMESSA'                   # literal remessa       [07]   REMESSA
+          header << '01'                        # Código do serviço     [02]   01
+          header << 'COBRANCA'                  # cod. servico          [08]   COBRANCA
+          header << ''.rjust(7, ' ')            # brancos               [07]
+          header << info_conta                  # info. conta           [20]
+          header << empresa_mae.format_size(30) # empresa mae           [30]
+          header << "#{cod_banco}#{nome_banco}" # identificação banco   [18]
+          header << data_geracao                # data geracao          [06]   Formato DDMMAA
+          header << sequencial_header           # sequencial remessa    [07]
+          header << complemento                 # complemento registro  [284]
+          header << '001'                       # versão do arquivo     [03]   001
+          header << '000001'                    # num. sequencial       [06]   000001
+          header
         end
 
         # Informacoes da conta corrente do cedente
@@ -55,11 +77,11 @@ module Brcobranca
         #
         def info_conta
           # CAMPO            TAMANHO
-          # agencia          4
-          # complemento      1
-          # conta corrente   8
-          # digito da conta  1
-          # complemento      6
+          # agencia          [04]
+          # complemento      [01]
+          # conta corrente   [08]
+          # digito da conta  [01]
+          # complemento      [06]
           "#{agencia} #{conta_corrente}#{digito_conta}#{''.rjust(6, ' ')}"
         end
 
@@ -68,11 +90,15 @@ module Brcobranca
         # @return [String]
         #
         def complemento
-          sequencial_remessa.to_s.ljust(294, ' ')
+          ''.rjust(284, ' ')
         end
 
-        def formata_nosso_numero(nosso_numero)
-          "0#{codigo_cedente}#{nosso_numero.rjust(6, '0')}"
+        def sequencial_header
+          sequencial_remessa.to_s.ljust(7, ' ')
+        end
+
+        def data_limite_pagamento(pagamento)
+          (pagamento.data_vencimento + pagamento.dias_limite_pagamento.days).strftime('%d%m%y')
         end
 
         # Detalhe do arquivo
@@ -84,6 +110,7 @@ module Brcobranca
         #
         # @return [String]
         #
+
         def monta_detalhe(pagamento, sequencial)
           raise Brcobranca::RemessaInvalida, pagamento if pagamento.invalid?
 
@@ -91,36 +118,41 @@ module Brcobranca
           detalhe += Brcobranca::Util::Empresa.new(documento_cedente).tipo  # tipo de identificacao da empresa      9[02]
           detalhe << documento_cedente.to_s.rjust(14, '0')                  # cpf/cnpj da empresa                   9[14]
           detalhe << agencia                                                # agencia                               9[04]
-          detalhe << ''.rjust(1, ' ')                                       # brancos                               X[01]
           detalhe << conta_corrente                                         # conta corrente                        9[08]
-          detalhe << digito_conta                                           # dac                                   9[01]
-          detalhe << ''.rjust(6, ' ')                                       # complemento do registro (brancos)     X[06]
-          detalhe << pagamento.documento_ou_numero.to_s.ljust(25) # identificacao do tit. na empresa      X[25]
-          detalhe << formata_nosso_numero(pagamento.nosso_numero.to_s)      # nosso numero                          9[11]
-          detalhe << ''.rjust(37, ' ')                                      # brancos                               X[37]
-          detalhe << pagamento.numero.to_s.rjust(10, '0') # numero do documento                   X[10]
-          detalhe << pagamento.data_vencimento.strftime('%d%m%y')           # data do vencimento                    A[06]
-          detalhe << pagamento.formata_valor                                # valor do documento                    9[13]
-          detalhe << ''.rjust(11, ' ')                                      # brancos                               X[11]
-          detalhe << pagamento.data_emissao.strftime('%d%m%y')              # data de emissao                       9[06]
-          detalhe << ''.rjust(4, ' ')                                       # brancos                               X[04]
-          detalhe << pagamento.formata_valor_mora(4).ljust(6, '0')          # valor mora ao dia                     9[06]
-          detalhe << pagamento.formata_percentual_multa.ljust(6, '0')       # valor multa                           9[06]
-          detalhe << ''.rjust(33, ' ')                                      # brancos                               X[33]
-          detalhe << pagamento.formata_valor_desconto                       # valor do desconto                     9[13]
+          detalhe << digito_conta                                           # dv conta                              9[01]
+          detalhe << ''.rjust(26, ' ')                                      # complemento do registro (brancos)     X[26]
+          detalhe << pagamento.nosso_numero.to_s.rjust(20, '0')             # nosso numero                          9[20]
+          detalhe << '01'                                                   # código da operação (01 - inclusão)    9[02]
+          detalhe << pagamento.data_emissao.strftime('%d%m%y')              # data da operação                      D[06]
+          detalhe << ''.rjust(6, ' ')                                       # brancos                               X[06]
+          detalhe << '01'                                                   # Número da parcela                     9[02]
+          detalhe << '3'                                                    # Tipo pagamento                        9[01]
+          detalhe << '3'                                                    # Tipo recebimento                      9[01]
+          detalhe << pagamento.especie_titulo                               # Espécie de documento                  9[02]
+          detalhe << ''.rjust(1, ' ')                                       # complemento do registro (brancos)     X[01]
+          detalhe << pagamento.dias_protesto.rjust(2, '0')                  # quantidade de dias do prazo           9[02]
+          detalhe << pagamento.cod_primeira_instrucao.rjust(2, '0')         # Tipo de protesto                      X[02] - 01 = Cartório, 02 = Serasa, 03 = Nenhum
+          detalhe << ''.rjust(9, ' ')                                       # brancos                               X[09]
+          detalhe << pagamento.numero.to_s.rjust(10, '0')                   # numero do documento                   A[10]
+          detalhe << pagamento.data_vencimento.strftime('%d%m%y')           # data do vencimento                    D[06]
+          detalhe << pagamento.formata_valor                                # valor do documento                    V[13]
+          detalhe << data_limite_pagamento(pagamento)                       # data limite pagamento                 D[06]
+          detalhe << ''.rjust(5, ' ')                                       # brancos                               X[05]
+          detalhe << pagamento.data_emissao.strftime('%d%m%y')              # data de emissao                       D[06]
+          detalhe << ''.rjust(1, ' ')                                       # brancos                               X[01]
           detalhe << pagamento.identificacao_sacado                         # identificacao do pagador              9[02]
           detalhe << pagamento.documento_sacado.to_s.rjust(14, '0')         # documento do pagador                  9[14]
           detalhe << pagamento.nome_sacado.format_size(40)                  # nome do pagador                       A[40]
-          detalhe << pagamento.endereco_sacado.format_size(37)              # endereco do pagador                   A[37]
-          detalhe << pagamento.bairro_sacado.format_size(15)                # bairro do pagador                     X[15]
-          detalhe << pagamento.cep_sacado                                   # cep do pagador                        9[08]
-          detalhe << pagamento.cidade_sacado.format_size(15)                # cidade do pagador                     A[15]
+          detalhe << ''.rjust(25, ' ')                                      # brancos                               X[25]
+          detalhe << pagamento.endereco_sacado.format_size(35)              # endereco do pagador                   A[35]
+          detalhe << pagamento.numero_endereco_sacado.to_s.rjust(6, ' ')    # numero endereco do pagador            9[06]
+          detalhe << pagamento.bairro_sacado.format_size(25)                # bairro do pagador                     X[25]
+          detalhe << pagamento.cidade_sacado.format_size(25)                # cidade do pagador                     A[25]
           detalhe << pagamento.uf_sacado                                    # uf do pagador                         A[02]
-          detalhe << pagamento.nome_avalista.format_size(25)                # nome do sacador/avalista              X[25]
-          detalhe << ''.rjust(1, ' ')                                       # complemento do registro               X[01]
-          detalhe << ''.rjust(14, ' ')                                      # documento avalista                    X[14] *
-          detalhe << pagamento.dias_protesto.rjust(2, '0')                  # quantidade de dias do prazo           9[02]
-          detalhe << ''.rjust(1, ' ')                                       # complemento do registro (brancos)     X[01]
+          detalhe << pagamento.cep_sacado                                   # cep do pagador                        9[08]
+          detalhe << ''.rjust(11, ' ')                                      # brancos                               X[11]
+          detalhe << ''.rjust(43, ' ')                                      # brancos                               X[43]
+          detalhe << ''.rjust(1, ' ')                                       # brancos                               X[01]
           detalhe << sequencial.to_s.rjust(6, '0')                          # numero do registro no arquivo         9[06]
           detalhe
         end
