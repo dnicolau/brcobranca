@@ -31,6 +31,8 @@ module Brcobranca
       attr_accessor :uf_sacado
       # <b>REQUERIDO</b>: Código da ocorrência
       attr_accessor :identificacao_ocorrencia
+      # <b>OPCIONAL</b>: numero do endereco do sacado (cliente)
+      attr_accessor :numero_endereco_sacado
       # <b>OPCIONAL</b>: nome do avalista
       attr_accessor :nome_avalista
       # <b>OPCIONAL</b>: documento do avalista
@@ -85,6 +87,8 @@ module Brcobranca
       attr_accessor :codigo_protesto
       # <b>OPCIONAL</b>: dias para protesto
       attr_accessor :dias_protesto
+      # <b>OPCIONAL</b>: dias limite pagamento
+      attr_accessor :dias_limite_pagamento
       # <b>OPCIONAL</b>: codigo baixa
       attr_accessor :codigo_baixa
       # <b>OPCIONAL</b>: dias para baixa
