@@ -34,7 +34,10 @@ module Brcobranca # :nodoc:[all]
 
         begin
           parts = number.with_precision(precision).split('.')
+          is_negative = parts[0].include?('-')
+          parts[0] = parts[0].gsub('-', '') if is_negative
           number = parts[0].to_i.with_delimiter(delimiter) + separator + parts[1].to_s
+          number = "-#{number}" if is_negative
           position == 'before' ? unit + number : number + unit
         rescue StandardError
           number
