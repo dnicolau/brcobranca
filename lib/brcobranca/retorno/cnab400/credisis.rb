@@ -13,7 +13,7 @@ module Brcobranca
           default_options = { except: [1] } # por padrao ignora a primeira linha que é header
           options = default_options.merge!(options)
 
-          super file, options
+          super
         end
 
         # Fixed width layout for Bradesco
@@ -32,14 +32,14 @@ module Brcobranca
           # :agencia_sem_dv, 24..28
           # :cedente_com_dv 29..36
           # :carteira, 21..23
-          # :agencia_sem_dv, 24..28
-          # :cedente_com_dv, 29..36
+          parse.field :agencia_sem_dv, 17..20
+          parse.field :cedente_com_dv, 21..29
 
           # :numero_controle_empresa, 37..61, # numero de controle da empresa
           # :zeros, 62..69
 
-          # :nosso_numero, 62..72 # identificacao do titulo no banco
-          parse.field :nosso_numero, 62..72
+          # :nosso_numero, 56..75 # identificacao do titulo no banco
+          parse.field :nosso_numero, 56..75
 
           # :zeros, 82..91 # uso do banco
           # :zeros, 92..103 # uso do banco
@@ -47,7 +47,10 @@ module Brcobranca
           # :zeros, 105..106
           # :carteira, 107..107 # de novo?
           # :cod_de_ocorrencia, 108..109 # código de ocorrencia
-          # :data_de_ocorrencia, 110..115 # data de ocorrencia no banco (ddmmaa)
+          # :data_de_ocorrencia, 78..83 # data de ocorrencia no banco (ddmmaa)
+          parse.field :codigo_ocorrencia, 76..77
+          parse.field :data_ocorrencia, 78..83
+
           # :n_do_documento, 116..125 # n umero do documento de cobranca (dupl, np etc)
           # :nosso_numero, 126..133 # confirmacao do numero do titulo no banco
           # :brancos, 134..145 # complemento de registro
@@ -67,6 +70,9 @@ module Brcobranca
 
           # :especie, 173..174 # especie do titulo
           # :especie_documento, 173..174
+
+          # :data_credito, 175..180 # data de credito desta liquidacao
+          parse.field :data_credito, 175..180
 
           # :tarifa_de_cobranca, 175..187 # valor da despesa de cobranca (ultimos 2 digitos, virgula decimal assumida)
           # :valor_tarifa, 175..187
@@ -94,9 +100,6 @@ module Brcobranca
 
           # :brancos, 292..293
           # :motivo_do_codigo_de_ocorrencia, 294..294
-
-          # :data_credito, 295..300 # data de credito desta liquidacao
-          parse.field :data_credito, 175..180
 
           # :origem_pagamento, 301..303
           # :brancos, 304..313
