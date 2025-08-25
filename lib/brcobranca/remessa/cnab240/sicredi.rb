@@ -221,7 +221,18 @@ module Brcobranca
           documento.ljust(tamanho, ' ')
         end
 
+        def numero(pagamento)
+          pagamento.documento = pre_formata_documento_ou_numero(pagamento)
+          pagamento.formata_documento_ou_numero(15, '0')
+        end
+
         private
+
+        def pre_formata_documento_ou_numero(pagamento)
+          doc = pagamento.documento.to_s.gsub(/[^0-9A-Za-z ]/, '')
+          espaco = doc.length + 5
+          doc.ljust(espaco, '0')[0...espaco]
+        end
 
         def mapeamento_para_modulo_11
           {
