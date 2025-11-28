@@ -117,7 +117,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
   context 'formatacoes dos valores' do
     it 'cod_banco deve ser 097' do
       expect(credisis.cod_banco).to eq '097'
-      expect(credisis.nome_banco.strip).to eq 'CENTRALCRED'
+      expect(credisis.nome_banco.strip).to eq 'CENTRALCREDI'
     end
 
     it 'info_conta deve retornar com 20 posicoes as informacoes da conta' do
@@ -145,37 +145,48 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
 
     context 'detalhe' do
       it 'informacoes devem estar posicionadas corretamente no detalhe' do
-        detalhe = credisis.monta_detalhe pagamento, 1
-        expect(detalhe[0]).to eq '1'                                                # registro detalhe
-        expect(detalhe[1..2]).to eq '02'                                            # tipo do documento do cedente
-        expect(detalhe[3..16]).to eq '12345678901234'                               # documento do cedente
-        expect(detalhe[17..20]).to eq '0001'                                        # agência
-        expect(detalhe[22..29]).to eq '00000002'                                    # conta corrente
-        expect(detalhe[30]).to eq '7'                                               # dígito da conta corrente
-        expect(detalhe[37..61]).to eq '6969'.ljust(25) # número controle cliente
-        expect(detalhe[62..72]).to eq '00027000123'                                 # nosso numero
-        expect(detalhe[73..109]).to eq ''.rjust(37, ' ')                            # brancos
-        expect(detalhe[110..119]).to eq '0000000000'                                # número documento
-        expect(detalhe[120..125]).to eq Date.current.strftime('%d%m%y') # data de vencimento
-        expect(detalhe[126..138]).to eq '0000000019990'                             # valor do titulo
-        expect(detalhe[139..149]).to eq ''.rjust(11, ' ')                           # brancos
-        expect(detalhe[150..155]).to eq Date.current.strftime('%d%m%y') # data emissão título
-        expect(detalhe[156..159]).to eq ''.rjust(4, ' ')                            # brancos
-        expect(detalhe[160..165]).to eq '080000'                                    # mora
-        expect(detalhe[166..171]).to eq '020000'                                    # multa
-        expect(detalhe[172..204]).to eq ''.rjust(33, ' ')                           # brancos
-        expect(detalhe[205..217]).to eq ''.rjust(13, '0')                           # desconto
-        expect(detalhe[218..219]).to eq '01'                                        # tipo documento sacado
-        expect(detalhe[220..233]).to eq '00012345678901'                            # documento sacado
-        expect(detalhe[234..273]).to eq 'PABLO DIEGO JOSE FRANCISCO DE PAULA JUAN'  # nome sacado
-        expect(detalhe[274..310]).to eq 'RUA RIO GRANDE DO SUL Sao paulo Minas'     # endereco sacado
-        expect(detalhe[311..325]).to eq 'Sao jose dos qu'                           # bairro sacado
-        expect(detalhe[326..333]).to eq '12345678'                                  # cep sacado
-        expect(detalhe[334..348]).to eq 'Santa rita de c'                           # cidade sacado
-        expect(detalhe[349..350]).to eq 'SP'                                        # uf sacado
-        expect(detalhe[351..375]).to eq ''.rjust(25, ' ')                           # nome avalista
-        expect(detalhe[377..390]).to eq ''.rjust(14, ' ')                           # documento avalista
-        expect(detalhe[391..392]).to eq '06'                                        # dias para envio a protesto
+        detalhe = credisis.monta_detalhe pagamento, 2
+
+        expect(detalhe[0]).to eq '1'                                               # registro detalhe
+        expect(detalhe[1..2]).to eq '02'                                           # tipo do documento do cedente
+        expect(detalhe[3..16]).to eq '12345678901234'                              # documento do cedente
+        expect(detalhe[17..20]).to eq '0001'                                       # agência
+        expect(detalhe[21..28]).to eq '00000002'                                   # conta corrente
+        expect(detalhe[29]).to eq '7'                                              # dígito da conta corrente
+        expect(detalhe[30..55]).to eq ''.rjust(26, ' ')                            # complemento (brancos)
+        expect(detalhe[56..75]).to eq '00000000000000000123'                       # nosso numero
+        expect(detalhe[76..77]).to eq '01'                                         # código da operação
+        expect(detalhe[78..83]).to eq Date.current.strftime('%d%m%y')              # data da operação (data emissão)
+        expect(detalhe[84..89]).to eq ''.rjust(6, ' ')                             # brancos
+        expect(detalhe[90..91]).to eq '01'                                         # número da parcela
+        expect(detalhe[92]).to eq '3'                                              # tipo pagamento
+        expect(detalhe[93]).to eq '3'                                              # tipo recebimento
+        expect(detalhe[94..95]).to eq '01'                                         # espécie de título
+        expect(detalhe[96]).to eq ' '                                              # branco
+        expect(detalhe[97..98]).to eq '06'                                         # dias para envio a protesto
+        expect(detalhe[99..100]).to eq '00'                                        # código primeira instrução / protesto
+        expect(detalhe[101..109]).to eq ''.rjust(9, ' ')                           # brancos
+        expect(detalhe[110..119]).to eq '0000000000'                               # número do documento
+        expect(detalhe[120..125]).to eq Date.current.strftime('%d%m%y')            # data de vencimento
+        expect(detalhe[126..138]).to eq '0000000019990'                            # valor do título (1999,01)
+        expect(detalhe[139..144]).to eq Date.current.strftime('%d%m%y')            # data limite pagamento
+        expect(detalhe[145..149]).to eq ''.rjust(5, ' ')                           # brancos
+        expect(detalhe[150..155]).to eq Date.current.strftime('%d%m%y')            # data emissão título
+        expect(detalhe[156]).to eq ' '                                             # branco
+        expect(detalhe[157..158]).to eq '01'                                       # tipo documento sacado
+        expect(detalhe[159..172]).to eq '00012345678901'                           # documento sacado
+        expect(detalhe[173..212]).to eq 'PABLO DIEGO JOSE FRANCISCO DE PAULA JUAN' # nome sacado (40)
+        expect(detalhe[213..237]).to eq ''.rjust(25, ' ')                          # brancos
+        expect(detalhe[238..272]).to eq 'RUA RIO GRANDE DO SUL Sao paulo Min'      # endereco sacado (35)
+        expect(detalhe[273..278]).to eq '      '                                   # numero endereco (6)
+        expect(detalhe[279..303]).to eq 'Sao jose dos quatro apost'                # bairro sacado (25)
+        expect(detalhe[304..328]).to eq 'Santa rita de cassia mari'                # cidade sacado (25)
+        expect(detalhe[329..330]).to eq 'SP'                                       # uf sacado
+        expect(detalhe[331..338]).to eq '12345678'                                 # cep sacado
+        expect(detalhe[339..349]).to eq ''.rjust(11, ' ')                          # brancos
+        expect(detalhe[350..392]).to eq ''.rjust(43, ' ')                          # brancos
+        expect(detalhe[393]).to eq ' '                                             # branco
+        expect(detalhe[394..399]).to eq '000002'                                   # sequencial no arquivo (6)
       end
     end
 
@@ -184,7 +195,9 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
 
       after { Timecop.return }
 
-      it { expect(credisis.gera_arquivo).to eq(read_remessa('remessa-credisis-cnab400.rem', credisis.gera_arquivo)) }
+      it {
+        expect(credisis.gera_arquivo).to eq(read_remessa('remessa-credisis-cnab400.rem', credisis.gera_arquivo))
+      }
     end
   end
 end
