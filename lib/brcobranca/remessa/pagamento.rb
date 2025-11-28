@@ -95,6 +95,10 @@ module Brcobranca
       attr_accessor :dias_baixa
       # <b>OPCIONAL</b>: Número da Parcela
       attr_accessor :parcela
+      # <b>OPCIONAL</b>: Dias carência do juros
+      attr_accessor :dias_carencia_juros
+      # <b>OPCIONAL</b>: Dias carência da multa
+      attr_accessor :dias_carencia_multa
 
       validates_presence_of :nosso_numero, :data_vencimento, :valor,
                             :documento_sacado, :nome_sacado, :endereco_sacado,
@@ -312,14 +316,12 @@ module Brcobranca
         Brcobranca::Util::Empresa.new(documento_avalista, zero).tipo
       end
 
-      private
-
-      def format_value(attribute, tamanho)
+      def format_value(attribute, tamanho, casas_decimais = '2')
         value = send(attribute)
 
         raise ValorInvalido, "Pagamento##{attribute}: Deve ser um Float" unless /\./.match?(value.to_s)
 
-        format('%.2f', value).delete('.').rjust(tamanho, '0')
+        format("%.#{casas_decimais}f", value).delete('.').rjust(tamanho, '0')
       end
     end
   end

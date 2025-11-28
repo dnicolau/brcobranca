@@ -98,7 +98,7 @@ module Brcobranca
         end
 
         def data_limite_pagamento(pagamento)
-          (pagamento.data_vencimento + pagamento.dias_limite_pagamento.days).strftime('%d%m%y')
+          (pagamento.data_vencimento + pagamento.dias_limite_pagamento.to_i).strftime('%d%m%y')
         end
 
         # Detalhe do arquivo
@@ -154,6 +154,23 @@ module Brcobranca
           detalhe << ''.rjust(43, ' ')                                      # brancos                               X[43]
           detalhe << ''.rjust(1, ' ')                                       # brancos                               X[01]
           detalhe << sequencial.to_s.rjust(6, '0')                          # numero do registro no arquivo         9[06]
+          detalhe
+        end
+
+        def monta_detalhe_multa(pagamento, sequencial)
+          detalhe = '2'
+          detalhe += ''.rjust(283, ' ')
+          detalhe << pagamento.format_value(:valor_mora, 15, '4')
+          detalhe << 'P'
+          detalhe << '2'
+          detalhe << pagamento.dias_carencia_juros.to_s.somente_numeros.last(2).rjust(2, '0')
+          detalhe << pagamento.format_value(:percentual_multa, 15, '4')
+          detalhe << 'P'
+          detalhe << '2'
+          detalhe << pagamento.dias_carencia_multa.to_s.somente_numeros.last(2).rjust(2, '0')
+          detalhe << ''.rjust(72, ' ')
+          detalhe << sequencial.to_s.rjust(6, '0')
+
           detalhe
         end
       end
