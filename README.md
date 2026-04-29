@@ -48,7 +48,7 @@ Criado pelo pessoal da [Akretion](http://www.akretion.com) muito TOP \o/
 | Banco do Nordeste | 400            | 400                   |
 | Banco de Brasília | Não            | 400                   |
 | Banestes          | Sim            | Não                   |
-| Banrisul          | 400            | 400                   |
+| Banrisul          | 400 e 240      | 400 e 240             |
 | Bradesco          | 400            | 400                   |
 | Caixa             | 240            | 240                   |
 | Citibank          | Não            | 400                   |

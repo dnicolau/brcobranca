@@ -71,7 +71,7 @@ RSpec.describe Brcobranca::Retorno::Cnab400::Daycoval do
 
   it 'Transforma arquivo de retorno em objetos de retorno' do
     pagamentos = described_class.load_lines(arquivo_daycoval.path)
-    expect(pagamentos.size).to eq(1)
+    expect(pagamentos.size).to eq(2) # ignora apenas o header; o segundo registro é o trailer
 
     pagamento = pagamentos.first
     expect(pagamento.codigo_registro).to eql('1')
