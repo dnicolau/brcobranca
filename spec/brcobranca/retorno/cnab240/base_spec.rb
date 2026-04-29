@@ -20,5 +20,16 @@ RSpec.describe Brcobranca::Retorno::Cnab240::Base do
         described_class.load_lines(arquivo)
       end
     end
+
+    context 'Banrisul' do
+      subject { Brcobranca::Retorno::Cnab240::Banrisul }
+
+      let(:nome_arquivo) { 'CNAB240BANRISUL.RET' }
+
+      it 'lê o arquivo pela classe do Banrisul' do
+        expect(subject).to receive(:load_lines).with(arquivo, {})
+        described_class.load_lines(arquivo)
+      end
+    end
   end
 end

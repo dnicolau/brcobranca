@@ -14,8 +14,7 @@ RSpec.describe Brcobranca::Boleto::Banrisul do # :nodoc:[all]
       agencia: '1102',
       conta_corrente: '1454204',
       nosso_numero: '22832563',
-      convenio: '9000150',
-      digito_convenio: '46'
+      convenio: '1102900015046'
     }
   end
 
@@ -31,7 +30,7 @@ RSpec.describe Brcobranca::Boleto::Banrisul do # :nodoc:[all]
     expect(boleto_novo.quantidade).to be(1)
     expect(boleto_novo.valor).to eq(0.0)
     expect(boleto_novo.valor_documento).to eq(0.0)
-    expect(boleto_novo.local_pagamento).to eql('QUALQUER BANCO ATÉ O VENCIMENTO')
+    expect(boleto_novo.local_pagamento).to eql('Pagável preferencialmente na rede integrada Banrisul')
     expect(boleto_novo.carteira).to eql('2')
   end
 
@@ -47,7 +46,7 @@ RSpec.describe Brcobranca::Boleto::Banrisul do # :nodoc:[all]
     expect(boleto_novo.quantidade).to be(1)
     expect(boleto_novo.valor).to eq(1278.9)
     expect(boleto_novo.valor_documento).to eq(1278.9)
-    expect(boleto_novo.local_pagamento).to eql('QUALQUER BANCO ATÉ O VENCIMENTO')
+    expect(boleto_novo.local_pagamento).to eql('Pagável preferencialmente na rede integrada Banrisul')
     expect(boleto_novo.cedente).to eql('Kivanio Barbosa')
     expect(boleto_novo.documento_cedente).to eql('12345678912')
     expect(boleto_novo.sacado).to eql('Claudio Pozzebom')
@@ -64,7 +63,7 @@ RSpec.describe Brcobranca::Boleto::Banrisul do # :nodoc:[all]
   it 'Não permitir gerar boleto com atributos inválido' do
     boleto_novo = described_class.new
     expect { boleto_novo.codigo_barras }.to raise_error(Brcobranca::BoletoInvalido)
-    expect(boleto_novo.errors.count).to be(5)
+    expect(boleto_novo.errors.count).to eq(6)
   end
 
   it 'Montar nosso_numero_boleto' do
@@ -87,7 +86,7 @@ RSpec.describe Brcobranca::Boleto::Banrisul do # :nodoc:[all]
     valid_attributes[:valor] = 550.0
     valid_attributes[:agencia] = '1102'
     valid_attributes[:conta_corrente] = '00099999'
-    valid_attributes[:convenio] = '9000150'
+    valid_attributes[:convenio] = '1102900015046'
     boleto_novo = described_class.new(valid_attributes)
     expect(boleto_novo.codigo_barras).to eql('04198100100000550002111029000150228325634059')
     expect(boleto_novo.codigo_barras.linha_digitavel).to eql('04192.11107 29000.150226 83256.340593 8 10010000055000')
@@ -97,7 +96,7 @@ RSpec.describe Brcobranca::Boleto::Banrisul do # :nodoc:[all]
     valid_attributes[:valor] = 550.00
     valid_attributes[:agencia] = '1102'
     valid_attributes[:conta_corrente] = '00099999'
-    valid_attributes[:convenio] = '9000150'
+    valid_attributes[:convenio] = '1102900015046'
     boleto_novo = described_class.new(valid_attributes)
     expect(boleto_novo.codigo_barras).to eql('04194100100000550002111029000150000092744028')
     expect(boleto_novo.codigo_barras.linha_digitavel).to eql('04192.11107 29000.150002 00927.440289 4 10010000055000')
@@ -107,7 +106,7 @@ RSpec.describe Brcobranca::Boleto::Banrisul do # :nodoc:[all]
     valid_attributes[:valor] = 550.00
     valid_attributes[:agencia] = '1102'
     valid_attributes[:conta_corrente] = '00099999'
-    valid_attributes[:convenio] = '9000150'
+    valid_attributes[:convenio] = '1102900015046'
     boleto_novo = described_class.new(valid_attributes)
     expect(boleto_novo.codigo_barras).to eql('04198100100000550002111029000150000091944023')
     expect(boleto_novo.codigo_barras.linha_digitavel).to eql('04192.11107 29000.150002 00919.440230 8 10010000055000')
@@ -117,19 +116,29 @@ RSpec.describe Brcobranca::Boleto::Banrisul do # :nodoc:[all]
     valid_attributes[:valor] = 1216.00
     valid_attributes[:agencia] = '0016'
     valid_attributes[:conta_corrente] = '00099999'
-    valid_attributes[:convenio] = '0164640'
+    valid_attributes[:convenio] = '0016016464046'
     boleto_novo = described_class.new(valid_attributes)
     expect(boleto_novo.codigo_barras).to eql('04192703700001216002100160164640034080994027')
     expect(boleto_novo.codigo_barras.linha_digitavel).to eql('04192.10018 60164.640033 40809.940279 2 70370000121600')
+
+    valid_attributes[:nosso_numero] = '30'
+    valid_attributes[:data_vencimento] = Date.parse('2026-07-01')
+    valid_attributes[:valor] = 10.00
+    valid_attributes[:agencia] = '0150'
+    valid_attributes[:conta_corrente] = '61065960'
+    valid_attributes[:carteira] = '1'
+    valid_attributes[:convenio] = '0150106596036'
+    boleto_novo = described_class.new(valid_attributes)
+    expect(boleto_novo.codigo_barras).to eql('04195149400000010002101501065960000000304015')
+    expect(boleto_novo.codigo_barras.linha_digitavel).to eql('04192.10158 01065.960005 00003.040151 5 14940000001000')
   end
 
   it 'Montar agencia_conta_boleto' do
-    valid_attributes[:convenio] = '9000150'
+    valid_attributes[:convenio] = '1102900015046'
     boleto_novo = described_class.new(valid_attributes)
     expect(boleto_novo.agencia_conta_boleto).to eql('1102 / 900015.0.46')
 
-    valid_attributes[:convenio] = '8505610'
-    valid_attributes[:digito_convenio] = '99'
+    valid_attributes[:convenio] = '1102850561099'
     boleto_novo = described_class.new(valid_attributes)
     expect(boleto_novo.agencia_conta_boleto).to eql('1102 / 850561.0.99')
   end
