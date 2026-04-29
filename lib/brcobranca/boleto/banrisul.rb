@@ -11,7 +11,7 @@ module Brcobranca
       validates_length_of :conta_corrente, maximum: 8, message: 'deve ser menor ou igual a 8 dígitos.'
       validates_length_of :nosso_numero, maximum: 8, message: 'deve ser menor ou igual a 8 dígitos.'
       validates_length_of :carteira, maximum: 1, message: 'deve ser menor ou igual a 1 dígitos.'
-      validates_length_of :convenio, maximum: 7, message: 'deve ser menor ou igual a 7 dígitos.'
+      validates_length_of :convenio, is: 13, message: 'deve ter 13 dígitos.'
       validates_length_of :digito_convenio, maximum: 2, message: 'deve ser menor ou igual a 2 dígitos.'
 
       def initialize(campos = {})
