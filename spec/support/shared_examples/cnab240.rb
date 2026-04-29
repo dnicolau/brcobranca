@@ -103,6 +103,8 @@ shared_examples_for 'cnab240' do
       expect(segmento_p[23..56]).to eq objeto.complemento_p(pagamento) # complemento do segmento P
       if objeto.cod_banco == '104'
         expect(segmento_p[62..76]).to eq '00000006969    ' # numero do documento
+      elsif objeto.cod_banco == '041'
+        expect(segmento_p[62..76]).to eq '6969           ' # numero do documento
       elsif objeto.cod_banco == '748'
         expect(segmento_p[62..76]).to eq '6969           ' # numero do documento
       else
@@ -148,9 +150,13 @@ shared_examples_for 'cnab240' do
       expect(segmento_q[133..135]).to eq '678' # sufixo CEP do sacado
       expect(segmento_q[136..150]).to eq 'Santa rita de c' # cidade do sacado
       expect(segmento_q[151..152]).to eq 'SP' # UF do sacado
-      expect(segmento_q[153]).to eq '1' # tipo inscricao avalista
-      expect(segmento_q[154..168]).to eq '000012345678901' # documento avalista
-      expect(segmento_q[169..208]).to eq 'ISABEL CRISTINA LEOPOLDINA ALGUSTA MIGUE' # nome do avalista
+      if objeto.cod_banco == '041'
+        expect(segmento_q[153..208]).to eq ''.rjust(56, ' ') # sacador/avalista deve ir no Y-01
+      else
+        expect(segmento_q[153]).to eq '1' # tipo inscricao avalista
+        expect(segmento_q[154..168]).to eq '000012345678901' # documento avalista
+        expect(segmento_q[169..208]).to eq 'ISABEL CRISTINA LEOPOLDINA ALGUSTA MIGUE' # nome do avalista
+      end
     end
   end
 

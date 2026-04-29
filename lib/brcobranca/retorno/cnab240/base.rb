@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'parseline'
+require 'active_support/core_ext/object/blank'
 
 module Brcobranca
   module Retorno
@@ -15,6 +16,8 @@ module Brcobranca
           case codigo_banco
           when '033'
             Brcobranca::Retorno::Cnab240::Santander.load_lines(file, options)
+          when '041'
+            Brcobranca::Retorno::Cnab240::Banrisul.load_lines(file, options)
           when '085'
             Brcobranca::Retorno::Cnab240::Ailos.load_lines(file, options)
           when '748'
