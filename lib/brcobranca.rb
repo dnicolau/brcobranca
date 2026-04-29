@@ -155,6 +155,7 @@ module Brcobranca
       autoload :Sicoob,        'brcobranca/retorno/cnab240/sicoob'
       autoload :Caixa,         'brcobranca/retorno/cnab240/caixa'
       autoload :Ailos,         'brcobranca/retorno/cnab240/ailos'
+      autoload :Banrisul,      'brcobranca/retorno/cnab240/banrisul'
     end
   end
 
@@ -187,6 +188,7 @@ module Brcobranca
       autoload :BancoBrasil,        'brcobranca/remessa/cnab240/banco_brasil'
       autoload :Sicoob,             'brcobranca/remessa/cnab240/sicoob'
       autoload :SicoobBancoBrasil,  'brcobranca/remessa/cnab240/sicoob_banco_brasil'
+      autoload :Banrisul,           'brcobranca/remessa/cnab240/banrisul'
       autoload :Sicredi,            'brcobranca/remessa/cnab240/sicredi'
       autoload :Unicred,            'brcobranca/remessa/cnab240/unicred'
       autoload :Ailos,              'brcobranca/remessa/cnab240/ailos'

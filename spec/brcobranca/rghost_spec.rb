@@ -23,7 +23,7 @@ RSpec.describe 'RGhost' do
     expect(File).to be_executable(RGhost::Config::GS[:path])
     s = `#{RGhost::Config::GS[:path]} -v`
     expect(s).to match(/^GPL Ghostscript/)
-    s = `#{RGhost::Config::GS[:path]} --version`
-    expect(s).to match(/[8-9]\.[0-9]/)
+    version = Gem::Version.new(`#{RGhost::Config::GS[:path]} --version`.strip)
+    expect(version).to be >= Gem::Version.new('8.0')
   end
 end
