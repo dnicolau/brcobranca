@@ -33,6 +33,8 @@ module Brcobranca
       attr_accessor :identificacao_ocorrencia
       # <b>OPCIONAL</b>: numero do endereco do sacado (cliente)
       attr_accessor :numero_endereco_sacado
+      # <b>OPCIONAL</b>: complemento do endereco do sacado (cliente)
+      attr_accessor :complemento_endereco_sacado
       # <b>OPCIONAL</b>: nome do avalista
       attr_accessor :nome_avalista
       # <b>OPCIONAL</b>: documento do avalista

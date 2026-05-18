@@ -42,6 +42,14 @@ shared_examples_for 'cnab400' do
         digito_conta: '8',
         pagamentos: [pagamento]
       }
+    elsif subject.instance_of?(Brcobranca::Remessa::Cnab400::Daycoval)
+      {
+        carteira: '121',
+        codigo_empresa: '12345',
+        empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
+        documento_cedente: '12345678910',
+        pagamentos: [pagamento]
+      }
     elsif subject.instance_of?(Brcobranca::Remessa::Cnab400::Sicoob)
       { carteira: '01',
         agencia: '1234',

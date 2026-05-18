@@ -53,5 +53,23 @@ RSpec.describe Brcobranca::Retorno::Cnab400::Base do
         described_class.load_lines(arquivo)
       end
     end
+
+    context 'Daycoval' do
+      subject { Brcobranca::Retorno::Cnab400::Daycoval }
+
+      let(:arquivo) do
+        @arquivo_daycoval = Tempfile.new('CNAB400DAYCOVAL')
+        @arquivo_daycoval.write("#{'0'.ljust(76)}707#{''.ljust(321)}")
+        @arquivo_daycoval.close
+        @arquivo_daycoval.path
+      end
+
+      after { @arquivo_daycoval&.unlink }
+
+      it 'lê o arquivo pela classe do Daycoval' do
+        expect(subject).to receive(:load_lines).with(arquivo, {})
+        described_class.load_lines(arquivo)
+      end
+    end
   end
 end
