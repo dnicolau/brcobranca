@@ -33,6 +33,8 @@ module Brcobranca
             Brcobranca::Retorno::Cnab400::Safra.load_lines(file, options)
           when "136"
             Brcobranca::Retorno::Cnab400::Unicred.load_lines(file, options)
+          when "707"
+            Brcobranca::Retorno::Cnab400::Daycoval.load_lines(file, options)
           when "422"
             Brcobranca::Retorno::Cnab400::Safra.load_lines(file, options)
           else
