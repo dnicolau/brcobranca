@@ -25,14 +25,14 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
   end
   let(:caixa) { subject.class.new(params) }
 
-  context 'convenio com 6 dígitos' do
+  context 'convenio informado com 6 dígitos' do
     let(:params) do
       { empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
         agencia: '12345',
         conta_corrente: '1234',
         versao_aplicativo: '1234',
         documento_cedente: '12345678901',
-        convenio: '123456',
+        convenio: '923553',
         digito_agencia: '1',
         sequencial_remessa: '000001',
         pagamentos: [pagamento] }
@@ -91,12 +91,12 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
         expect(nome_banco[0..22]).to eq 'CAIXA ECONOMICA FEDERAL'
       end
 
-      it 'versao do layout do arquivo deve retornar 101 para convênio até 6 dígitos' do
-        expect(caixa.versao_layout_arquivo).to eq '101'
+      it 'versao do layout do arquivo deve retornar 107' do
+        expect(caixa.versao_layout_arquivo).to eq '107'
       end
 
-      it 'versao do layout do lote deve ser 060 para convenio até 6 dígitos' do
-        expect(caixa.versao_layout_lote).to eq '060'
+      it 'versao do layout do lote deve ser 067' do
+        expect(caixa.versao_layout_lote).to eq '067'
       end
 
       it 'codigo do convenio deve ser 20 zeros' do
@@ -105,15 +105,27 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
 
       it 'convenio lote deve retornar as informacoes nas posicoes corretas' do
         conv_lote = caixa.convenio_lote
-        expect(conv_lote[0..5]).to eq '123456'
-        expect(conv_lote[6..19]).to eq ''.rjust(14, '0')
+        expect(conv_lote[0..6]).to eq '0923553'
+        expect(conv_lote[7..19]).to eq ''.rjust(13, '0')
       end
 
       it 'info_conta deve retornar as informacoes nas posicoes corretas' do
         info_conta = caixa.info_conta
         expect(info_conta[0..4]).to eq '12345' # agencia
         expect(info_conta[5]).to eq '1' # digito agencia
-        expect(info_conta[6..11]).to eq '123456' # convenio
+        expect(info_conta[6..12]).to eq '0923553' # convenio
+      end
+
+      it 'header do arquivo deve conter codigo do beneficiario e layout nas posicoes corretas' do
+        header = caixa.monta_header_arquivo
+        expect(header[58..64]).to eq '0923553'
+        expect(header[163..165]).to eq '107'
+      end
+
+      it 'header do lote deve conter layout e codigo do beneficiario nas posicoes corretas' do
+        header_lote = caixa.monta_header_lote(1)
+        expect(header_lote[13..15]).to eq '067'
+        expect(header_lote[33..39]).to eq '0923553'
       end
 
       it 'complemento header deve retornar as informacoes nas posicoes corretas' do
@@ -132,7 +144,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
       it 'complemento P deve retornar as informacoes nas posicoes corretas' do
         comp_p = caixa.complemento_p pagamento
         expect(comp_p.size).to eq 34
-        expect(comp_p[0..5]).to eq '123456' # convenio
+        expect(comp_p[0..6]).to eq '0923553' # convenio
         expect(comp_p[17..18]).to eq '14' # modalidade carteira
         expect(comp_p[19..33]).to eq '000000000000123' # nosso numero
       end

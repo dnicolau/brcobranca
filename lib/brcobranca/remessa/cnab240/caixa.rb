@@ -112,7 +112,7 @@ module Brcobranca
         end
 
         def convenio=(valor)
-          @convenio = valor.to_s.rjust(6, '0') if valor
+          @convenio = valor.to_s.rjust(7, '0') if valor
         end
 
         def versao_aplicativo=(valor)
@@ -130,15 +130,15 @@ module Brcobranca
         def versao_layout_arquivo
           if convenio.to_s.size < 6
             '050'
-          elsif convenio.to_i <= 1_000_000
-            '101'
-          elsif convenio.to_i >= 1_000_000
+          elsif convenio.to_s.size >= 7
             '107'
+          else
+            '101'
           end
         end
 
         def versao_layout_lote
-          return '067' if convenio.to_s.size > 6
+          return '067' if versao_layout_arquivo == '107'
 
           '060'
         end
