@@ -190,6 +190,16 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Bradesco do
         expect(detalhe[234..273]).to eq 'PABLO DIEGO JOSE FRANCISCO DE PAULA JUAN' # nome do pagador
         expect(detalhe[274..313]).to eq bradesco.formata_endereco_sacado(pagamento) # endereco do pagador
       end
+
+      it 'informa o codigo da instrucao e os dias para protesto' do
+        pagamento.cod_primeira_instrucao = '06'
+        pagamento.dias_protesto = '5'
+
+        detalhe = bradesco.monta_detalhe pagamento, 1
+
+        expect(detalhe[156..157]).to eq '06'
+        expect(detalhe[158..159]).to eq '05'
+      end
     end
 
     context 'arquivo' do
